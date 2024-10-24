@@ -1,11 +1,12 @@
-import { Router } from "express";
-import { login, signUp } from "./auth.controllers";
-import { checkLoginData, checkSignUpData } from "./auth.middlewares";
-import { checkPrimeSync } from "crypto";
+// auth.route.ts
+import express from 'express';
+import validate from '../../middlewares/validate';
+import { authSchema } from './auth.schema';
+import { SignUpController } from './auth.controllers';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/signup',checkSignUpData, signUp);
-router.post('/login',checkLoginData, login)
+// Define the signup route with validation middleware
+router.post('/signup', validate(authSchema.create), SignUpController.signup);
 
-export const authRouter = router;
+export const authRouter=router;

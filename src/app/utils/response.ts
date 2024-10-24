@@ -1,15 +1,41 @@
-import { Response } from "express";
+// response.util.ts
+import { Response } from 'express';
 
-type ResponseData = {
-  success: boolean;
-  message?: any;
-  data?: any;
+interface SuccessResponse {
+  status: 'success';
+  data?: any; // You can further refine this type
+  message?: string;
+}
+
+interface ErrorResponse {
+  status: 'false';
+  message: string;
+  errors?: any; // You can further refine this type if needed
+}
+
+export const sendSuccessResponse = (
+  res: Response,
+  data?: any,
+  message?: string
+) => {
+  const response: SuccessResponse = {
+    status: 'success',
+    data,
+    message: message || 'Request was successful',
+  };
+  return res.status(200).json(response);
 };
 
-export const sendResponse = (
+export const sendErrorResponse = (
   res: Response,
-  statusCode: number,
-  responseData: ResponseData
+  message: string,
+  errors?: any,
+  statusCode: number = 400
 ) => {
-  res.status(statusCode).json(responseData);
+  const response: ErrorResponse = {
+    status: 'false',
+    message,
+    errors,
+  };
+  return res.status(statusCode).json(response);
 };

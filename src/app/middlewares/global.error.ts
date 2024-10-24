@@ -1,14 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import { sendResponse } from "../utils/response";
+import { sendErrorResponse } from "../utils/response"; // Importing your utility function
 
-const errorHandler = (err:Error, req:Request, res:Response, next:NextFunction) => {
-    console.log("Error stack : ", err.stack);
-    console.log('Error message :', err.message);
-    console.log('Error name :', err.name);
+// Error handler middleware function
+const errorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // Log the error for debugging purposes (optional)
+  console.error(err);
 
-    return sendResponse(res, 500, {
-        success: false,
-        message: 'Internal server error'
-    })
-}
+  // Call sendErrorResponse with the response object, the error message, and optionally a status code
+  sendErrorResponse(res, err.message || "Internal Server Error", 500); // 500 is an example status code for server errors
+};
+
 export default errorHandler;
