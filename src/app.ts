@@ -27,18 +27,18 @@ connectDB();
 // Route
 app.get('/', (req:Request, res:Response) => {
     console.log("hit on /")
-    res.json({ message: 'This is base URL for Health Care Backend' });
+    res.json({ message: 'This is base URL for Med Pocket Backend' });
 })
 
-app.use('/api/auth', authRouter);
-app.use('/api', userRouter);
-app.use('/api', categoryRouter);
-app.use('/api', foodRouter );
-app.use('/api', orderRouter);
-app.use('/images', uploadRouter)
+// app.use('/api/auth', authRouter);
+// app.use('/api', userRouter);
+// app.use('/api', categoryRouter);
+// app.use('/api', foodRouter );
+// app.use('/api', orderRouter);
+// app.use('/images', uploadRouter)
 
 
-app.use('/api/', bmi_router)
+app.use('/api/',bmi_router)
 
 logRoutes(app)
 // Error handling middleware
