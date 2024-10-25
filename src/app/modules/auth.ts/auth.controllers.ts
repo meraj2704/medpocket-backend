@@ -1,25 +1,27 @@
 // auth.controller.ts
-import { Request, Response } from 'express';
-import { AuthServices } from './auth.services';
+import { Request, Response } from "express";
+import { AuthServices } from "./auth.services";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
 
-
- const signup = async (req: Request, res: Response) => {
+const signup = async (req: Request, res: Response) => {
   try {
-    const user = await AuthServices.signup(req.body); // `req.body` is already validated by middleware
-    return res.status(201).json({
-      status: 'success',
-      message: 'User registered successfully',
-      data: user,
-    });
+    const response = await AuthServices.signup(req.body);
+    const user = {
+      _id: response._id,
+      name: response.name,
+      email: response.email,
+    };
+    return sendSuccessResponse(res, user, "User registered successfully", 201);
   } catch (error: any) {
-    return res.status(400).json({
-      status: 'error',
-      message: error.message,
-    });
+    return sendErrorResponse(
+      res,
+      error.message || "Signup failed",
+      error.details || [],
+      400
+    );
   }
 };
 
-
 export const SignUpController = {
   signup,
-}
+};

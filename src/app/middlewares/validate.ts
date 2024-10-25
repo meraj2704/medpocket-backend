@@ -1,5 +1,5 @@
 // validate.ts
-import { ZodSchema } from 'zod';
+import { ZodError, ZodSchema } from 'zod';
 import { Request, Response, NextFunction } from 'express';
 import { sendErrorResponse } from '../utils/response';
 
@@ -10,14 +10,16 @@ const validate = (schema: ZodSchema) => (req: Request, res: Response, next: Next
       query: req.query,
       params: req.params,
     });
-    next(); // If validation succeeds, proceed to the next middleware or controller
-  } catch (e: any) {
-    sendErrorResponse(res, e.message || "Validation Error", 400); // 500 is an example status code for server errors
-
-    // return res.status(400).json({
-    //   status: 'error',
-    //   errors: e.errors, // Return validation errors to the client
-    // });
+    next(); // Proceed if validation succeeds
+  } catch (error) {
+    if (error instanceof ZodError) {
+      const formattedErrors = error.errors.map(err => ({
+        field: err.path.join('.'),
+        message: err.message,
+      }));
+      return sendErrorResponse(res, 'Validation failed', formattedErrors, 400);
+    }
+    next(error); // For other types of errors, forward to the global error handler
   }
 };
 

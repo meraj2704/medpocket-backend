@@ -1,34 +1,44 @@
 // response.util.ts
 import { Response } from 'express';
 
-interface SuccessResponse {
+interface SuccessResponse<T = any> {
   status: 'success';
-  data?: any; // You can further refine this type
+  data?: T;
   message?: string;
+  meta?: {
+    timestamp: string;
+  };
 }
 
 interface ErrorResponse {
   status: 'false';
   message: string;
-  errors?: any; // You can further refine this type if needed
+  errors?: any;
+  meta?: {
+    timestamp: string;
+  };
 }
 
-export const sendSuccessResponse = (
+export const sendSuccessResponse = <T = any>(
   res: Response,
-  data?: any,
-  message?: string
+  data?: T,
+  message: string = 'Request was successful',
+  statusCode: number = 200
 ) => {
-  const response: SuccessResponse = {
+  const response: SuccessResponse<T> = {
     status: 'success',
     data,
-    message: message || 'Request was successful',
+    message,
+    meta: {
+      timestamp: new Date().toISOString(),
+    },
   };
-  return res.status(200).json(response);
+  return res.status(statusCode).json(response);
 };
 
 export const sendErrorResponse = (
   res: Response,
-  message: string,
+  message: string = 'An error occurred',
   errors?: any,
   statusCode: number = 400
 ) => {
@@ -36,6 +46,9 @@ export const sendErrorResponse = (
     status: 'false',
     message,
     errors,
+    meta: {
+      timestamp: new Date().toISOString(),
+    },
   };
   return res.status(statusCode).json(response);
 };

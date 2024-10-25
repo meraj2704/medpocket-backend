@@ -1,18 +1,22 @@
-import { NextFunction, Request, Response } from "express";
-import { sendErrorResponse } from "../utils/response"; // Importing your utility function
+// global.error.ts
+import { NextFunction, Request, Response } from 'express';
+import { sendErrorResponse } from '../utils/response';
+import { CustomError } from '../utils/customError'; // Import the custom error class
 
-// Error handler middleware function
-const errorHandler = (
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  // Log the error for debugging purposes (optional)
-  console.error(err);
+const errorHandler = (err: Error | CustomError, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    return next(err);
+  }
 
-  // Call sendErrorResponse with the response object, the error message, and optionally a status code
-  sendErrorResponse(res, err.message || "Internal Server Error", 500); // 500 is an example status code for server errors
+  // Log the error if needed
+  console.error('Error:', err);
+
+  // Check if the error is a CustomError and has `status` and `details`, otherwise default values
+  const statusCode = err instanceof CustomError ? err.status : 500;
+  const message = err.message || 'Internal Server Error';
+  const details = err instanceof CustomError ? err.details : [];
+
+  sendErrorResponse(res, message, details, statusCode);
 };
 
 export default errorHandler;
