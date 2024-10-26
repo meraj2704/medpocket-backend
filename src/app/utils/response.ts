@@ -2,7 +2,8 @@
 import { Response } from 'express';
 
 interface SuccessResponse<T = any> {
-  status: 'success';
+  success:boolean;
+  status: number;
   data?: T;
   message?: string;
   meta?: {
@@ -11,7 +12,8 @@ interface SuccessResponse<T = any> {
 }
 
 interface ErrorResponse {
-  status: 'false';
+  success: 'false';
+  status: number;
   message: string;
   errors?: any;
   meta?: {
@@ -26,9 +28,10 @@ export const sendSuccessResponse = <T = any>(
   statusCode: number = 200
 ) => {
   const response: SuccessResponse<T> = {
-    status: 'success',
-    data,
+    success: true,
+    status: statusCode,
     message,
+    data,
     meta: {
       timestamp: new Date().toISOString(),
     },
@@ -43,7 +46,8 @@ export const sendErrorResponse = (
   statusCode: number = 400
 ) => {
   const response: ErrorResponse = {
-    status: 'false',
+    success: 'false',
+    status: statusCode,
     message,
     errors,
     meta: {

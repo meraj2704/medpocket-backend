@@ -22,6 +22,23 @@ const signup = async (req: Request, res: Response) => {
   }
 };
 
+const login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const user = await AuthServices.login(email, password);
+    if (!user)
+      return sendErrorResponse(res, "Invalid email or password", [], 401);
+
+    const userData = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    };
+    return sendSuccessResponse(res, userData, "Login successful", 200);
+  } catch (error: any) {}
+};
+
 export const SignUpController = {
   signup,
+  login,
 };

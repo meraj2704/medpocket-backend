@@ -16,4 +16,11 @@ router.post(
   SignUpController.signup
 );
 
+router.post(
+  "/login",
+  upload.none(),
+  validate(authSchema.login),
+  SignUpController.login
+);
+
 export const authRouter = router;
