@@ -15,8 +15,23 @@ const loginSchema = z.object({
   }),
 });
 
+const requestPasswordResetSchema = z.object({
+  body: z.object({
+    email: z.string().email("Invalid email address"),
+  }),
+});
+
+const resetSchema = z.object({
+  body: z.object({
+    email: z.string().email("Invalid email address"),
+    otp: z.string().min(6, "OTP is required"),
+    newPassword: z.string().min(6, "Password is required"),
+  }),
+});
 
 export const authSchema = {
   create: signupSchema,
   login: loginSchema,
+  request: requestPasswordResetSchema,
+  reset: resetSchema,
 };

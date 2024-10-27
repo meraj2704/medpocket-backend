@@ -26,7 +26,22 @@ const login = async (email: string, password: string) => {
   return user;
 };
 
+const findUserByEmail = async (email: string) => {
+  return User.findOne({ email });
+};
+
+const updatePassword = async (email: string, newPassword: string) => {
+  const hashedPassword = await AuthUtils.hashPassword(newPassword);
+  return User.findOneAndUpdate(
+    { email },
+    { password: hashedPassword },
+    { new: true }
+  );
+};
+
 export const AuthServices = {
   signup,
   login,
+  findUserByEmail,
+  updatePassword,
 };
