@@ -10,8 +10,10 @@ const validate = (schema: ZodSchema) => (req: Request, res: Response, next: Next
       query: req.query,
       params: req.params,
     });
+    console.log("passed")
     next(); // Proceed if validation succeeds
   } catch (error) {
+    console.log("failed")
     if (error instanceof ZodError) {
       const formattedErrors = error.errors.map(err => ({
         field: err.path.join('.'),
