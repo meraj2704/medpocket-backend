@@ -12,27 +12,27 @@ const upload = multer();
 // Define the signup route with validation middleware
 router.post(
   "/signup",
-  // upload.none(),
+  upload.none(),
   validate(authSchema.create),
   AuthController.signup
 );
 
 router.post(
   "/login",
-  // upload.none(),
+  upload.none(),
   validate(authSchema.login),
   AuthController.login
 );
 
 router.post(
   "/request-password-reset",
-  // upload.none(),
+  upload.none(),
   validate(authSchema.request),
   AuthController.requestPasswordReset
 );
 router.post(
   "/reset-password",
-  // upload.none(),
+  upload.none(),
   validate(authSchema.reset),
   AuthController.resetPassword
 );
