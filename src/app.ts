@@ -3,7 +3,7 @@ import connectDB from "./db";
 import cors from "cors";
 import logRoutes from "./app/middlewares/logRoutes";
 import errorHandler from "./app/middlewares/global.error";
-import { bmi_router } from "./app/modules/bmi/bmi.routes";
+import {  healthRouter } from "./app/modules/healthInfo/health.routes";
 import { authRouter } from "./app/modules/auth.ts/auth.routes";
 
 const app: Application = express();
@@ -24,7 +24,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/auth", authRouter);
 
-app.use("/api/", bmi_router);
+app.use('/api', healthRouter)
 
 logRoutes(app);
 app.use(errorHandler);
