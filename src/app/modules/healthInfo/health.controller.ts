@@ -8,9 +8,16 @@ const updateHealthData = async (req: Request, res: Response) => {
 
   let bmi: number | undefined;
   if (height && weight) {
-    bmi = weight / Math.pow(height / 100, 2);
-  }
+    const feet = Math.floor(height);
+    const inches = Math.round((height % 1) * 12);
 
+    const totalHeightInInches = feet * 12 + inches;
+    const heightInMeters = totalHeightInInches * 0.0254;
+
+    // Calculate BMI
+    bmi = weight / Math.pow(heightInMeters, 2);
+    bmi = parseFloat(bmi.toFixed(2));
+  }
   console.log("bmi", bmi);
 
   try {
