@@ -4,15 +4,16 @@ import { UserHealthDocument } from "./health.interface";
 
 
 const HealthSchema = new Schema<UserHealthDocument>({
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  healthData: [
+  user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  health_data: [
     {
       glucose: { type: Number },
       oxygen: { type: Number },
       height: { type: Number },
       weight: { type: Number },
       pressure: { type: Number },
-      timestamp: { type: Date, default: Date.now },
+      bmi: { type: Number },
+      time_stamp: { type: Date, default: Date.now },
     },
   ],
 });

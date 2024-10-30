@@ -24,7 +24,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/auth", authRouter);
 
-app.use('/api', healthRouter)
+app.use('/api/health', healthRouter)
 
 logRoutes(app);
 app.use(errorHandler);

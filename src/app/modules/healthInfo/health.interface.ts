@@ -6,10 +6,11 @@ export interface HealthInfo {
   height?: number;
   weight?: number;
   pressure?: number;
-  timestamp: Date;
+  bmi: number;
+  time_stamp: Date;
 }
 
 export interface UserHealthDocument extends Document {
-  userId: mongoose.Schema.Types.ObjectId;
-  healthData: HealthInfo[];
+  user_id: mongoose.Schema.Types.ObjectId;
+  health_data: HealthInfo[];
 }
