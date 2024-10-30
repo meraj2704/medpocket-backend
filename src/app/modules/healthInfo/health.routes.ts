@@ -8,5 +8,6 @@ const healthRouter = express.Router();
 
 healthRouter.post("/update",upload.none(), healthControllers.updateHealthData);
 healthRouter.get("/history", upload.none(), healthControllers.getHealthHistory);
+healthRouter.get("/latest", upload.none(), healthControllers.getLatestHealthData);
 
 export { healthRouter };

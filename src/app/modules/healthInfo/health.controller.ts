@@ -94,7 +94,41 @@ const getHealthHistory = async (req: Request, res: Response) => {
   }
 };
 
+const getLatestHealthData = async (req: Request, res: Response) => {
+  const user_id = req.query.user_id as string;
+
+  try {
+    const latestRecord = await Health.findOne(
+      { user_id },
+      { health_data: { $slice: -1 } }
+    ).sort({ "health_data.time_stamp": -1 });
+
+    if (!latestRecord || latestRecord.health_data.length === 0) {
+      return sendSuccessResponse(res, {}, "No health data found for this user", 404);
+    }
+    
+    const latestHealthData = latestRecord.health_data[0];
+
+    const responseData = {
+      glucose: latestHealthData.glucose,
+      oxygen: latestHealthData.oxygen,
+      height: latestHealthData.height,
+      weight: latestHealthData.weight,
+      bmi: latestHealthData.bmi,
+    };
+
+    return sendSuccessResponse(res, responseData, "Latest health data retrieved successfully", 200);
+  } catch (error) {
+    console.log("Error fetching latest health data: ", error);
+    return sendErrorResponse(res, "Failed to retrieve latest health data", [], 500);
+  }
+};
+
+
+
+
 export const healthControllers = {
   updateHealthData,
   getHealthHistory,
+  getLatestHealthData,
 };
