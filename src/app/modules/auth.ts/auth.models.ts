@@ -1,5 +1,5 @@
 // auth.model.ts
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -13,8 +13,12 @@ const userSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true,
   },
+  phone_number: { type: String },
+  blood_group: { type: String },
+  date_of_birth: { type: Date },
+  gender: { type: String },
+  image_url: { type: String },
 });
 
-export const User = mongoose.model('User', userSchema);
+export const User = mongoose.model("User", userSchema);

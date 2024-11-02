@@ -1,8 +1,9 @@
 // response.util.ts
-import { Response } from 'express';
+import { Response } from "express";
+import { User } from "../modules/auth.ts/auth.models";
 
 interface SuccessResponse<T = any> {
-  success:boolean;
+  success: boolean;
   status: number;
   data?: T;
   message?: string;
@@ -12,7 +13,7 @@ interface SuccessResponse<T = any> {
 }
 
 interface ErrorResponse {
-  success: 'false';
+  success: "false";
   status: number;
   message: string;
   errors?: any;
@@ -24,7 +25,7 @@ interface ErrorResponse {
 export const sendSuccessResponse = <T = any>(
   res: Response,
   data?: T,
-  message: string = 'Request was successful',
+  message: string = "Request was successful",
   statusCode: number = 200
 ) => {
   const response: SuccessResponse<T> = {
@@ -41,12 +42,12 @@ export const sendSuccessResponse = <T = any>(
 
 export const sendErrorResponse = (
   res: Response,
-  message: string = 'An error occurred',
+  message: string = "An error occurred",
   errors?: any,
   statusCode: number = 400
 ) => {
   const response: ErrorResponse = {
-    success: 'false',
+    success: "false",
     status: statusCode,
     message,
     errors,
@@ -56,3 +57,4 @@ export const sendErrorResponse = (
   };
   return res.status(statusCode).json(response);
 };
+

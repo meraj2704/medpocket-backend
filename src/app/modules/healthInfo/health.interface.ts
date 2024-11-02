@@ -14,3 +14,21 @@ export interface UserHealthDocument extends Document {
   user_id: mongoose.Schema.Types.ObjectId;
   health_data: HealthInfo[];
 }
+
+export interface GlucoseDocument extends Document {
+  user_id: mongoose.Schema.Types.ObjectId;
+  value: number;
+  time_stamp: Date;
+}
+
+export interface PressureDocument extends Document {
+  user_id: mongoose.Schema.Types.ObjectId;
+  value: number;
+  time_stamp: Date;
+}
+
+export interface OxygenDocument extends Document {
+  user_id: mongoose.Schema.Types.ObjectId;
+  value: number;
+  time_stamp: Date;
+}

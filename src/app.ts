@@ -3,8 +3,9 @@ import connectDB from "./db";
 import cors from "cors";
 import logRoutes from "./app/middlewares/logRoutes";
 import errorHandler from "./app/middlewares/global.error";
-import {  healthRouter } from "./app/modules/healthInfo/health.routes";
+import { healthRouter } from "./app/modules/healthInfo/health.routes";
 import { authRouter } from "./app/modules/auth.ts/auth.routes";
+import { userRouter } from "./app/modules/user/user.route";
 
 const app: Application = express();
 const PORT = process.env.PORT || 4040;
@@ -23,8 +24,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRouter);
-
-app.use('/api/health', healthRouter)
+app.use("/api/user", userRouter);
+app.use("/api/health", healthRouter);
 
 logRoutes(app);
 app.use(errorHandler);
