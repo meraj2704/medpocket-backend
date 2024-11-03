@@ -13,5 +13,6 @@ router.post(
 );
 
 router.get("/profile/:user_id", UserControllers.getProfile);
+router.post("/profile-edit/:user_id",upload.single("file"), UserControllers.useProfileEdit);
 
 export const userRouter = router;

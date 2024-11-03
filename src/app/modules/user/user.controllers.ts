@@ -37,7 +37,27 @@ const userProfileSetup = async (req: Request, res: Response) => {
   }
 };
 
-const useProfileEdit = (request: Request, response: Response) => {};
+const useProfileEdit = async (request: Request, response: Response) => {
+  const { user_id } = request.params;
+  const { email,...updatedData } = request.body;
+  try {
+    console.log("updated data: ", updatedData);
+    const user = await findUserById(user_id);
+    if (!user) {
+      return sendErrorResponse(response, "User not found", 404);
+    }
+    if (request.file) {
+      updatedData.image_url = request.file.path;
+    }
+    const updatedUser = await userService.editProfile(user_id, updatedData);
+
+    return sendSuccessResponse(response, updatedUser, "success", 200);
+  } catch (err) {
+    console.error(err);
+    console.log(err);
+    return response.status(500).send("Failed to update user profile");
+  }
+};
 
 const getProfile = async (req: Request, res: Response) => {
   const { user_id } = req.params;
@@ -62,6 +82,7 @@ const getProfile = async (req: Request, res: Response) => {
     );
   } catch (error) {
     console.error(error);
+    console.log(error);
     return sendErrorResponse(res, "Failed to retrieve user profile", 500);
   }
 };

@@ -17,3 +17,5 @@ export interface UserImage {
 export interface ProfileSetupI extends UserImage {
   data: UserInfoI;
 }
+
+

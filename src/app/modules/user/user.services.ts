@@ -22,6 +22,16 @@ const profileSetup = async (
   return user;
 };
 
+const editProfile = async (user_id: string, data: UserInfoI) => {
+  console.log("edit data", data);
+  const user = await User.findByIdAndUpdate(user_id, data, { new: true });
+  if (!user) {
+    return null;
+  }
+  return user;
+};
+
 export const userService = {
   profileSetup,
+  editProfile,
 };
