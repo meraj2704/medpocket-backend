@@ -39,7 +39,7 @@ const userProfileSetup = async (req: Request, res: Response) => {
 
 const useProfileEdit = async (request: Request, response: Response) => {
   const { user_id } = request.params;
-  const { email,...updatedData } = request.body;
+  const { email, ...updatedData } = request.body;
   try {
     console.log("updated data: ", updatedData);
     const user = await findUserById(user_id);
@@ -50,8 +50,16 @@ const useProfileEdit = async (request: Request, response: Response) => {
       updatedData.image_url = request.file.path;
     }
     const updatedUser = await userService.editProfile(user_id, updatedData);
-
-    return sendSuccessResponse(response, updatedUser, "success", 200);
+    const newData = {
+      name: updatedUser?.name,
+      phone_number: updatedUser?.phone_number,
+      email: updatedUser?.email,
+      blood_group: updatedUser?.blood_group,
+      date_of_birth: updatedUser?.date_of_birth,
+      gender: updatedUser?.gender,
+      image_url: updatedUser?.image_url,
+    };
+    return sendSuccessResponse(response, newData, "success", 200);
   } catch (err) {
     console.error(err);
     console.log(err);
