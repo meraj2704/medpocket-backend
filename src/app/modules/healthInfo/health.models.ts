@@ -4,32 +4,12 @@ import {
   GlucoseDocument,
   OxygenDocument,
   PressureDocument,
-  UserHealthDocument,
 } from "./health.interface";
 
-const HealthSchema = new Schema<UserHealthDocument>({
-  user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  health_data: [
-    {
-      glucose: { type: Number },
-      oxygen: { type: Number },
-      height: { type: Number },
-      weight: { type: Number },
-      pressure: { type: Number },
-      bmi: { type: Number },
-      time_stamp: { type: Date, default: Date.now },
-    },
-  ],
-});
-
-export const Health = mongoose.model<UserHealthDocument>(
-  "Health",
-  HealthSchema
-);
 
 const GlucoseSchema = new Schema<GlucoseDocument>({
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  value: { type: Number, required: true },
+  glucose: { type: Number, required: true },
   date: { type: Date, default: Date.now },
 });
 
@@ -40,8 +20,8 @@ export const Glucose = mongoose.model<GlucoseDocument>(
 
 const PressureSchema = new Schema<PressureDocument>({
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  highPressure: { type: Number, required: true },
-  lowPressure: { type: Number, required: true },
+  high_pressure: { type: Number, required: true },
+  low_pressure: { type: Number, required: true },
   date: { type: Date, default: Date.now },
 });
 
@@ -52,7 +32,7 @@ export const Pressure = mongoose.model<PressureDocument>(
 
 const OxygenSchema = new Schema<OxygenDocument>({
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  value: { type: Number, required: true },
+  oxygen: { type: Number, required: true },
   date: { type: Date, default: Date.now },
 });
 

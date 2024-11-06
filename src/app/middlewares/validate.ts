@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import { sendErrorResponse } from '../utils/response';
 
 const validate = (schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
+  console.log("body", req.body)
   try {
     schema.parse({
       body: req.body,

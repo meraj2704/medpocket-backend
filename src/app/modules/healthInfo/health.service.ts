@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { BodyMeasurement } from "./health.models";
+import { BodyMeasurement, Glucose } from "./health.models";
 
 const CreateBodyMeasurements = async (
   user_id: mongoose.Types.ObjectId,
@@ -38,15 +38,25 @@ const measurementsByDays = async (
   return measurements;
 };
 
-
 const allUserMeasurements = async () => {
   const measurements = await BodyMeasurement.find();
   return measurements;
+};
+
+const createGlucose = async (id: mongoose.Types.ObjectId, glucose: number) => {
+  const today = new Date();
+  const newGlucose = await Glucose.create({
+    user_id: id,
+    glucose: glucose,
+    date: today,
+  });
+  return newGlucose;
 };
 
 export const HealthServices = {
   CreateBodyMeasurements,
   singleMeasurement,
   allUserMeasurements,
-  measurementsByDays
+  measurementsByDays,
+  createGlucose,
 };

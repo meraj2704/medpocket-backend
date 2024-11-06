@@ -1,11 +1,19 @@
 import { z } from "zod";
 
-const create_bmi_schema = z.object({
+const addMeasurements = z.object({
   body: z.object({
-    bmi: z.number().min(1, "BMI is required"),
+    height: z.string().min(1, "BMI is required"),
+    weight: z.string().min(1, "BMI is required"),
   }),
 });
 
-export const bmi_schema = {
-  create: create_bmi_schema,
+const addGlucose = z.object({
+  body: z.object({
+    glucose: z.string().min(1, "Glucose level is required"),
+  }),
+});
+
+export const healthSchema = {
+  addMeasurements,
+  addGlucose,
 };
