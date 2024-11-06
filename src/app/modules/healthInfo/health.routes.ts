@@ -18,5 +18,7 @@ healthRouter.post(
   upload.none(),
   healthControllers.CreateBodyMeasurements
 );
+healthRouter.get('/single-measurement/:_id',healthControllers.getSingleMeasurements);
+healthRouter.get('/all-user-measurements', healthControllers.getAllUserMeasurements);
 
 export { healthRouter };

@@ -87,13 +87,13 @@ const CreateBodyMeasurements = async (req: Request, res: Response) => {
       weight
     );
     const data = {
-      _id:bodyMeasurement._id,
-      user_id:bodyMeasurement.user_id,
+      _id: bodyMeasurement._id,
+      user_id: bodyMeasurement.user_id,
       height: bodyMeasurement.height,
       weight: bodyMeasurement.weight,
       bmi: bodyMeasurement.bmi,
       date: bodyMeasurement.date,
-    }
+    };
     if (!bodyMeasurement) {
       return sendErrorResponse(
         res,
@@ -102,12 +102,7 @@ const CreateBodyMeasurements = async (req: Request, res: Response) => {
         500
       );
     }
-    return sendSuccessResponse(
-      res,
-      data,
-      "Body measurement created",
-      201
-    );
+    return sendSuccessResponse(res, data, "Body measurement created", 201);
   } catch (err) {
     console.log("Error fetching latest health data: ", err);
     return sendErrorResponse(
@@ -119,9 +114,61 @@ const CreateBodyMeasurements = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleMeasurements = async (req: Request, res: Response) => {
+  const { _id } = req.params;
+  const id = new mongoose.Types.ObjectId(_id);
+  try {
+    const bodyMeasurement = await HealthServices.singleMeasurement(id);
+    if (!bodyMeasurement) {
+      return sendErrorResponse(
+        res,
+        "Failed to fetch body measurement",
+        [],
+        500
+      );
+    }
+    return sendSuccessResponse(
+      res,
+      bodyMeasurement,
+      "Body measurement retrieved",
+      200
+    );
+  } catch (err) {
+    console.log("Error fetching single body measurement: ", err);
+    return sendErrorResponse(
+      res,
+      "Failed to retrieve body measurement",
+      [],
+      500
+    );
+  }
+};
+
+const getAllUserMeasurements = async (req: Request, res: Response) => {
+  try {
+    const bodyMeasurements = await HealthServices.allUserMeasurements();
+    return sendSuccessResponse(
+      res,
+      bodyMeasurements,
+      "Body measurements retrieved",
+      200
+    );
+  } catch (err) {
+    console.log("Error fetching all user body measurements: ", err);
+    return sendErrorResponse(
+      res,
+      "Failed to retrieve body measurements",
+      [],
+      500
+    );
+  }
+};
+
 export const healthControllers = {
   updateHealthData,
   getHealthHistory,
   getLatestHealthData,
-  CreateBodyMeasurements
+  CreateBodyMeasurements,
+  getSingleMeasurements,
+  getAllUserMeasurements,
 };

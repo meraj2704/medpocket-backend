@@ -13,6 +13,7 @@ const signup = async (req: Request, res: Response) => {
       _id: response._id,
       name: response.name,
       email: response.email,
+      all_setup:response.all_setup
     };
     return sendSuccessResponse(res, user, "User registered successfully", 201);
   } catch (error: any) {
@@ -36,6 +37,7 @@ const login = async (req: Request, res: Response) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      all_setup: user.all_setup,
     };
     return sendSuccessResponse(res, userData, "Login successful", 200);
   } catch (error: any) {}

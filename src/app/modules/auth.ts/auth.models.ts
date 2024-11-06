@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   date_of_birth: { type: Date },
   gender: { type: String },
   image_url: { type: String },
+  all_setup:{type:Boolean, default: false}
 });
 
 export const User = mongoose.model("User", userSchema);

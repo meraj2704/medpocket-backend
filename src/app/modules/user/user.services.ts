@@ -16,6 +16,7 @@ const profileSetup = async (
       date_of_birth,
       gender,
       image_url,
+      all_setup: true,
     },
     { new: true }
   );

@@ -6,7 +6,7 @@ const CreateBodyMeasurements = async (
   height: number,
   weight: number
 ) => {
-    const bmi = +(weight / Math.pow(height / 100, 2)).toFixed(1);
+  const bmi = +(weight / Math.pow(height / 100, 2)).toFixed(1);
   const date = new Date();
   const bodyMeasurement = await BodyMeasurement.create({
     user_id,
@@ -17,7 +17,18 @@ const CreateBodyMeasurements = async (
   });
   return bodyMeasurement;
 };
+const singleMeasurement = async (_id: mongoose.Types.ObjectId) => {
+  const measurement = await BodyMeasurement.findById(_id);
+  return measurement;
+};
+
+const allUserMeasurements = async () => {
+  const measurements = await BodyMeasurement.find();
+  return measurements;
+};
 
 export const HealthServices = {
   CreateBodyMeasurements,
+  singleMeasurement,
+  allUserMeasurements
 };
