@@ -30,7 +30,7 @@ export const Health = mongoose.model<UserHealthDocument>(
 const GlucoseSchema = new Schema<GlucoseDocument>({
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
   value: { type: Number, required: true },
-  time_stamp: { type: Date, default: Date.now },
+  date: { type: Date, default: Date.now },
 });
 
 export const Glucose = mongoose.model<GlucoseDocument>(
@@ -40,8 +40,9 @@ export const Glucose = mongoose.model<GlucoseDocument>(
 
 const PressureSchema = new Schema<PressureDocument>({
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  value: { type: Number, required: true },
-  time_stamp: { type: Date, default: Date.now },
+  highPressure: { type: Number, required: true },
+  lowPressure: { type: Number, required: true },
+  date: { type: Date, default: Date.now },
 });
 
 export const Pressure = mongoose.model<PressureDocument>(
@@ -52,7 +53,7 @@ export const Pressure = mongoose.model<PressureDocument>(
 const OxygenSchema = new Schema<OxygenDocument>({
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
   value: { type: Number, required: true },
-  time_stamp: { type: Date, default: Date.now },
+  date: { type: Date, default: Date.now },
 });
 
 export const Oxygen = mongoose.model<OxygenDocument>("Oxygen", OxygenSchema);
