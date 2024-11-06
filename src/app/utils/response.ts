@@ -13,7 +13,7 @@ interface SuccessResponse<T = any> {
 }
 
 interface ErrorResponse {
-  success: "false";
+  success: boolean;
   status: number;
   message: string;
   errors?: any;
@@ -47,7 +47,7 @@ export const sendErrorResponse = (
   statusCode: number = 400
 ) => {
   const response: ErrorResponse = {
-    success: "false",
+    success: false,
     status: statusCode,
     message,
     errors,
