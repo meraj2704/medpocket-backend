@@ -18,19 +18,20 @@ export interface UserHealthDocument extends Document {
 export interface GlucoseDocument extends Document {
   user_id: mongoose.Schema.Types.ObjectId;
   value: number;
-  time_stamp: Date;
+  date: Date;
 }
 
 export interface PressureDocument extends Document {
   user_id: mongoose.Schema.Types.ObjectId;
-  value: number;
-  time_stamp: Date;
+  highPressure: number;
+  lowPressure: number;
+  date: Date;
 }
 
 export interface OxygenDocument extends Document {
   user_id: mongoose.Schema.Types.ObjectId;
   value: number;
-  time_stamp: Date;
+  date: Date;
 }
 
 export interface BodyMeasurementDocument {
