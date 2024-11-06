@@ -94,6 +94,7 @@ const getProfile = async (req: Request, res: Response) => {
       blood_group: user.blood_group,
       date_of_birth: user.date_of_birth,
       gender: user.gender,
+      image_url: user.image_url,
     };
     return sendSuccessResponse(
       res,
