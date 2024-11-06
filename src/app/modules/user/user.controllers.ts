@@ -36,6 +36,7 @@ const userProfileSetup = async (req: Request, res: Response) => {
       blood_group: updated_user_info?.blood_group,
       date_of_birth: updated_user_info?.date_of_birth,
       gender: updated_user_info?.gender,
+      image_url: updated_user_info?.image_url,
     };
     return sendSuccessResponse(
       res,
