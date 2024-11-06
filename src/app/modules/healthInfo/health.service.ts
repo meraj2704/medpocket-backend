@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 import { BodyMeasurement } from "./health.models";
 
-const CreateBodyMeasurements = async (user_id:mongoose.Types.ObjectId, height:number, weight:number) => {
-  const bmi = weight / Math.pow(height / 100, 2);
+const CreateBodyMeasurements = async (
+  user_id: mongoose.Types.ObjectId,
+  height: number,
+  weight: number
+) => {
+    const bmi = +(weight / Math.pow(height / 100, 2)).toFixed(1);
   const date = new Date();
   const bodyMeasurement = await BodyMeasurement.create({
     user_id,
@@ -14,7 +18,6 @@ const CreateBodyMeasurements = async (user_id:mongoose.Types.ObjectId, height:nu
   return bodyMeasurement;
 };
 
-
-export const HealthServices ={
-    CreateBodyMeasurements,
-}
+export const HealthServices = {
+  CreateBodyMeasurements,
+};
