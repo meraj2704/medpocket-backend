@@ -20,5 +20,6 @@ healthRouter.post(
 );
 healthRouter.get('/single-measurement/:_id',healthControllers.getSingleMeasurements);
 healthRouter.get('/all-user-measurements', healthControllers.getAllUserMeasurements);
+healthRouter.get('/measurements-by-days/:user_id',healthControllers.getMeasurementsByDays)
 
 export { healthRouter };

@@ -22,6 +22,23 @@ const singleMeasurement = async (_id: mongoose.Types.ObjectId) => {
   return measurement;
 };
 
+const measurementsByDays = async (
+  user_id: mongoose.Types.ObjectId,
+  days: number
+) => {
+  // Calculate the date 'days' ago
+  const dateForm = new Date();
+  dateForm.setDate(dateForm.getDate() - days);
+
+  // Fetch measurements from the database
+  const measurements = await BodyMeasurement.find({
+    user_id,
+    date: { $gte: dateForm },
+  });
+  return measurements;
+};
+
+
 const allUserMeasurements = async () => {
   const measurements = await BodyMeasurement.find();
   return measurements;
@@ -30,5 +47,6 @@ const allUserMeasurements = async () => {
 export const HealthServices = {
   CreateBodyMeasurements,
   singleMeasurement,
-  allUserMeasurements
+  allUserMeasurements,
+  measurementsByDays
 };

@@ -1,10 +1,10 @@
 // controllers/health.controllers.ts
 import { Request, Response } from "express";
 import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
-import { User } from "../auth.ts/auth.models";
 import { findUserById } from "../../utils/findUser";
 import mongoose from "mongoose";
 import { HealthServices } from "./health.service";
+import { BodyMeasurement } from "./health.models";
 
 const updateHealthData = async (req: Request, res: Response) => {
   const { user_id, glucose, oxygen, pressure } = req.body;
@@ -144,6 +144,39 @@ const getSingleMeasurements = async (req: Request, res: Response) => {
   }
 };
 
+const getMeasurementsByDays = async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  const days = parseInt(req.query.days as string);
+
+  // Validate 'days' to ensure it's a valid number
+  if (isNaN(days) || days < 0) {
+    return res.status(400).json({ message: 'Invalid number of days provided' });
+  }
+
+  const objectUserId = new mongoose.Types.ObjectId(user_id);
+
+  try {
+    const bodyMeasurements = await HealthServices.measurementsByDays(
+      objectUserId,
+      days
+    );
+    return sendSuccessResponse(
+      res,
+      bodyMeasurements,
+      `Last ${days} days of body measurements`,
+      200
+    );
+  } catch (err) {
+    console.error('Error fetching measurements by days: ', err);
+    return sendErrorResponse(
+      res,
+      'Failed to retrieve body measurements',
+      [],
+      500
+    );
+  }
+};
+
 const getAllUserMeasurements = async (req: Request, res: Response) => {
   try {
     const bodyMeasurements = await HealthServices.allUserMeasurements();
@@ -171,4 +204,5 @@ export const healthControllers = {
   CreateBodyMeasurements,
   getSingleMeasurements,
   getAllUserMeasurements,
+  getMeasurementsByDays
 };
