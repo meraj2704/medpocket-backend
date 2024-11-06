@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import { findUserById } from "../../utils/findUser";
 import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
-import { User } from "../auth.ts/auth.models";
 import { userService } from "./user.services";
+import { HealthServices } from "../healthInfo/health.service";
+import mongoose from "mongoose";
 
 const userProfileSetup = async (req: Request, res: Response) => {
   const { user_id } = req.params;
+  const objectIdUserId = new mongoose.Types.ObjectId(user_id);
+  const { height, weight } = req.body;
   console.log("user id", user_id);
   try {
     const image_url = req.file ? req.file.path : undefined;
@@ -18,6 +21,15 @@ const userProfileSetup = async (req: Request, res: Response) => {
       req.body,
       image_url
     );
+    const bodyMeasurements = await HealthServices.CreateBodyMeasurements(
+      objectIdUserId,
+      height,
+      weight
+    );
+    
+    if (!bodyMeasurements) {
+      return sendErrorResponse(res, "Failed to create body measurements", 500);
+    }
     const showData = {
       name: updated_user_info?.name,
       phone_number: updated_user_info?.phone_number,

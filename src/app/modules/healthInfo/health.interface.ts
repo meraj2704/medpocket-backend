@@ -32,3 +32,11 @@ export interface OxygenDocument extends Document {
   value: number;
   time_stamp: Date;
 }
+
+export interface BodyMeasurementDocument {
+  user_id: mongoose.Schema.Types.ObjectId;
+  height: number;
+  weight: number;
+  bmi: number;
+  date:Date;
+}

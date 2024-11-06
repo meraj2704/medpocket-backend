@@ -1,6 +1,6 @@
-// models/health.model.ts
 import mongoose, { Schema, Document } from "mongoose";
 import {
+  BodyMeasurementDocument,
   GlucoseDocument,
   OxygenDocument,
   PressureDocument,
@@ -49,11 +49,23 @@ export const Pressure = mongoose.model<PressureDocument>(
   PressureSchema
 );
 
-
 const OxygenSchema = new Schema<OxygenDocument>({
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
   value: { type: Number, required: true },
   time_stamp: { type: Date, default: Date.now },
-})
+});
 
 export const Oxygen = mongoose.model<OxygenDocument>("Oxygen", OxygenSchema);
+
+const BodyMeasurementSchema = new Schema<BodyMeasurementDocument>({
+  user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  height: { type: Number, required: true },
+  weight: { type: Number, required: true },
+  bmi: { type: Number, required: true },
+  date: { type: Date, default: Date.now },
+});
+
+export const BodyMeasurement = mongoose.model<BodyMeasurementDocument>(
+  "BodyMeasurement",
+  BodyMeasurementSchema
+);
