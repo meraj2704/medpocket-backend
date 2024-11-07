@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { BodyMeasurement, Glucose } from "./health.models";
+import { BodyMeasurement, Glucose, Pressure } from "./health.models";
 
 const CreateBodyMeasurements = async (
   user_id: mongoose.Types.ObjectId,
@@ -77,6 +77,45 @@ const glucoseByDays = async (
   });
   return measurements;
 };
+const createPressure = async (
+  id: mongoose.Types.ObjectId,
+  high_pressure: number,
+  low_pressure: number
+) => {
+  const today = new Date();
+  const newPressure = await Pressure.create({
+    user_id: id,
+    high_pressure,
+    low_pressure,
+    date: today,
+  });
+  return newPressure;
+};
+
+const singlePressure = async (_id: mongoose.Types.ObjectId) => {
+  const pressure = await Pressure.findById(_id);
+  return pressure;
+};
+
+const allUsersPressure = async () => {
+  const pressure = await Pressure.find();
+  return pressure;
+};
+
+const pressureByDays = async (
+  user_id: mongoose.Types.ObjectId,
+  days: number
+) => {
+  const dateForm = new Date();
+  dateForm.setDate(dateForm.getDate() - days);
+
+  // Fetch measurements from the database
+  const pressures = await Pressure.find({
+    user_id,
+    date: { $gte: dateForm },
+  });
+  return pressures;
+};
 
 export const HealthServices = {
   CreateBodyMeasurements,
@@ -86,5 +125,9 @@ export const HealthServices = {
   createGlucose,
   singleGlucose,
   allUsersGlucose,
-  glucoseByDays
+  glucoseByDays,
+  createPressure,
+  singlePressure,
+  allUsersPressure,
+  pressureByDays,
 };

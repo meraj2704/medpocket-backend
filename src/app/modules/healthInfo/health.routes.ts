@@ -1,4 +1,3 @@
-// routes/health.routes.ts
 import express from "express";
 import upload from "../../config/multer.config";
 import { healthControllers } from "./health.controller";
@@ -38,5 +37,11 @@ healthRouter.get(
   "/glucose-by-days/:user_id",
   healthControllers.getGlucoseByDays
 );
+
+
+healthRouter.post('/add-pressure/:user_id', upload.none(), validate(healthSchema.addPressure), healthControllers.createPressure);
+healthRouter.get('/single-pressure/:_id', healthControllers.getSinglePressure);
+healthRouter.get('/all-user-pressure', healthControllers.getAllUsersPressure);
+healthRouter.get('/pressure-by-days/:user_id', healthControllers.getPressureByDays);
 
 export { healthRouter };

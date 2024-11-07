@@ -237,6 +237,82 @@ const getGlucoseByDays = async (req: Request, res: Response) => {
   }
 };
 
+const createPressure = async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  const objectUserId = new mongoose.Types.ObjectId(user_id);
+  const { high_pressure, low_pressure } = req.body;
+
+  try {
+    const pressure = await HealthServices.createPressure(
+      objectUserId,
+      high_pressure,
+      low_pressure
+    );
+    const data = {
+      _id: pressure._id,
+      user_id: pressure.user_id,
+      high_pressure: pressure.high_pressure,
+      low_pressure: pressure.low_pressure,
+      date: pressure.date,
+    };
+    if (!pressure) {
+      return sendErrorResponse(res, "Failed to create pressure", [], 500);
+    }
+    return sendSuccessResponse(res, data, "Pressure created", 201);
+  } catch (err) {
+    console.log("Error creating pressure: ", err);
+    return sendErrorResponse(res, "Failed to create pressure", [], 500);
+  }
+};
+
+const getSinglePressure = async (req: Request, res: Response) => {
+  const { _id } = req.params;
+  const id = new mongoose.Types.ObjectId(_id);
+  try {
+    const pressure = await HealthServices.singlePressure(id);
+    if (!pressure) {
+      return sendErrorResponse(res, "Failed to fetch pressure", [], 500);
+    }
+    return sendSuccessResponse(res, pressure, "Pressure retrieved", 200);
+  } catch (err) {
+    console.log("Error fetching single pressure: ", err);
+    return sendErrorResponse(res, "Failed to retrieve pressure.", [], 500);
+  }
+};
+
+const getAllUsersPressure = async (req: Request, res: Response) => {
+  try {
+    const pressures = await HealthServices.allUsersPressure();
+    return sendSuccessResponse(res, pressures, "Pressure retrieved", 200);
+  } catch (err) {
+    console.log("Error fetching all users pressure: ", err);
+    return sendErrorResponse(res, "Failed to retrieve pressure.", [], 500);
+  }
+};
+
+const getPressureByDays = async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  const days = parseInt(req.query.days as string);
+  // Validate 'days' to ensure it's a valid number
+  if (isNaN(days) || days < 0) {
+    return res.status(400).json({ message: "Invalid number of days provided" });
+  }
+
+  const objectUserId = new mongoose.Types.ObjectId(user_id);
+  try {
+    const pressure = await HealthServices.pressureByDays(objectUserId, days);
+    return sendSuccessResponse(
+      res,
+      pressure,
+      `Last ${days} days of body pressure`,
+      200
+    );
+  } catch (err) {
+    console.log("Error validating 'days' query parameter: ", err);
+    return sendErrorResponse(res, "Invalid number of days provided", [], 400);
+  }
+};
+
 export const healthControllers = {
   CreateBodyMeasurements,
   getSingleMeasurements,
@@ -246,4 +322,8 @@ export const healthControllers = {
   getSingleGlucose,
   getAllUsersGlucose,
   getGlucoseByDays,
+  createPressure,
+  getSinglePressure,
+  getAllUsersPressure,
+  getPressureByDays,
 };

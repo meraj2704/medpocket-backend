@@ -13,7 +13,15 @@ const addGlucose = z.object({
   }),
 });
 
+const addPressure = z.object({
+  body: z.object({
+    high_pressure: z.string().min(1, "High pressure is required"),
+    low_pressure: z.string().min(1, "Low pressure is required"),
+  }),
+});
+
 export const healthSchema = {
   addMeasurements,
   addGlucose,
+  addPressure,
 };
