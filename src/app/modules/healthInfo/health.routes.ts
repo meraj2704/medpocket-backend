@@ -32,5 +32,11 @@ healthRouter.post(
   validate(healthSchema.addGlucose),
   healthControllers.createGlucose
 );
+healthRouter.get("/single-glucose/:_id", healthControllers.getSingleGlucose);
+healthRouter.get("/all-user-glucose", healthControllers.getAllUsersGlucose);
+healthRouter.get(
+  "/glucose-by-days/:user_id",
+  healthControllers.getGlucoseByDays
+);
 
 export { healthRouter };

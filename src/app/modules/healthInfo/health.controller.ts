@@ -164,10 +164,86 @@ const createGlucose = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleGlucose = async (req: Request, res: Response) => {
+  const { _id } = req.params;
+  const id = new mongoose.Types.ObjectId(_id);
+  try {
+    const glucoseMeasurement = await HealthServices.singleGlucose(id);
+    if (!glucoseMeasurement) {
+      return sendErrorResponse(
+        res,
+        "Failed to fetch glucose measurement",
+        [],
+        500
+      );
+    }
+    return sendSuccessResponse(
+      res,
+      glucoseMeasurement,
+      "Glucose measurement retrieved",
+      200
+    );
+  } catch (err) {
+    console.log("Error fetching single glucose measurement: ", err);
+    return sendErrorResponse(
+      res,
+      "Failed to retrieve glucose measurement",
+      [],
+      500
+    );
+  }
+};
+
+const getAllUsersGlucose = async (req: Request, res: Response) => {
+  try {
+    const glucoseMeasurements = await HealthServices.allUsersGlucose();
+    return sendSuccessResponse(
+      res,
+      glucoseMeasurements,
+      "Glucose measurements retrieved",
+      200
+    );
+  } catch (err) {
+    console.log("Error fetching all users glucose measurements: ", err);
+    return sendErrorResponse(
+      res,
+      "Failed to retrieve glucose measurements",
+      [],
+      500
+    );
+  }
+};
+
+const getGlucoseByDays = async (req: Request, res: Response) => {
+  const { user_id } = req.params;
+  const days = parseInt(req.query.days as string);
+  // Validate 'days' to ensure it's a valid number
+  if (isNaN(days) || days < 0) {
+    return res.status(400).json({ message: "Invalid number of days provided" });
+  }
+
+  const objectUserId = new mongoose.Types.ObjectId(user_id);
+  try {
+    const glucose = await HealthServices.glucoseByDays(objectUserId, days);
+    return sendSuccessResponse(
+      res,
+      glucose,
+      `Last ${days} days of body glucose`,
+      200
+    );
+  } catch (err) {
+    console.log("Error validating 'days' query parameter: ", err);
+    return sendErrorResponse(res, "Invalid number of days provided", [], 400);
+  }
+};
+
 export const healthControllers = {
   CreateBodyMeasurements,
   getSingleMeasurements,
   getAllUserMeasurements,
   getMeasurementsByDays,
   createGlucose,
+  getSingleGlucose,
+  getAllUsersGlucose,
+  getGlucoseByDays,
 };

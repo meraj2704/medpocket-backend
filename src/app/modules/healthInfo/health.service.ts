@@ -53,10 +53,38 @@ const createGlucose = async (id: mongoose.Types.ObjectId, glucose: number) => {
   return newGlucose;
 };
 
+const singleGlucose = async (_id: mongoose.Types.ObjectId) => {
+  const glucose = await Glucose.findById(_id);
+  return glucose;
+};
+
+const allUsersGlucose = async () => {
+  const glucoses = await Glucose.find();
+  return glucoses;
+};
+
+const glucoseByDays = async (
+  user_id: mongoose.Types.ObjectId,
+  days: number
+) => {
+  const dateForm = new Date();
+  dateForm.setDate(dateForm.getDate() - days);
+
+  // Fetch measurements from the database
+  const measurements = await Glucose.find({
+    user_id,
+    date: { $gte: dateForm },
+  });
+  return measurements;
+};
+
 export const HealthServices = {
   CreateBodyMeasurements,
   singleMeasurement,
   allUserMeasurements,
   measurementsByDays,
   createGlucose,
+  singleGlucose,
+  allUsersGlucose,
+  glucoseByDays
 };
