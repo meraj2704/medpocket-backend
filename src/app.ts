@@ -6,6 +6,7 @@ import errorHandler from "./app/middlewares/global.error";
 import { healthRouter } from "./app/modules/healthInfo/health.routes";
 import { authRouter } from "./app/modules/auth.ts/auth.routes";
 import { userRouter } from "./app/modules/user/user.route";
+import reportRouter from "./app/modules/reports/reports.route";
 
 const app: Application = express();
 const PORT = process.env.PORT || 4040;
@@ -26,6 +27,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/health", healthRouter);
+app.use("/api/report", reportRouter);
 
 logRoutes(app);
 app.use(errorHandler);
