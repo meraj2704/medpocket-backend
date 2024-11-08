@@ -10,25 +10,22 @@ const getLatestUserData = async (req: Request, res: Response) => {
     const { glucose, measurements, pressure } =
       await homeService.latestDataOfUser(id);
 
-    if (!glucose || !measurements || !pressure) {
-      return sendErrorResponse(res, "Failed to fetch latest data", [], 500);
-    }
 
     const newData = {
       glucose: {
-        glucose:glucose.glucose,
-        date:glucose.date
+        glucose:glucose?.glucose,
+        date:glucose?.date
       },
       measurements: {
-        height: measurements.height,
-        weight: measurements.weight,
-        bmi: measurements.bmi,
-        date:measurements.date
+        height: measurements?.height,
+        weight: measurements?.weight,
+        bmi: measurements?.bmi,
+        date:measurements?.date
       },
       pressure: {
-        low_pressure: pressure.low_pressure,
-        high_pressure: pressure.high_pressure,
-        data:pressure.date
+        low_pressure: pressure?.low_pressure,
+        high_pressure: pressure?.high_pressure,
+        data:pressure?.date
       },
     };
 
