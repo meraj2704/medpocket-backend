@@ -9,8 +9,6 @@ const getLatestUserData = async (req: Request, res: Response) => {
   try {
     const { glucose, measurements, pressure } =
       await homeService.latestDataOfUser(id);
-
-
     const newData = {
       glucose: {
         glucose:glucose?.glucose,

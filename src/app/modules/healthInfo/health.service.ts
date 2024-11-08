@@ -8,14 +8,30 @@ const CreateBodyMeasurements = async (
 ) => {
   const bmi = +(weight / Math.pow(height / 100, 2)).toFixed(1);
   const date = new Date();
-  const bodyMeasurement = await BodyMeasurement.create({
+  const currentDate = new Date();
+  const startOfDay = new Date(currentDate.setHours(0, 0, 0, 0));
+  const endOfDay = new Date(currentDate.setHours(23, 59, 59, 999));
+  let existBodyMeasurements = await BodyMeasurement.findOne({
     user_id,
-    height,
-    weight,
-    bmi,
-    date,
+    date: { $gte: startOfDay, $lte: endOfDay },
   });
-  return bodyMeasurement;
+  if (existBodyMeasurements) {
+    existBodyMeasurements.height = height;
+    existBodyMeasurements.weight = weight;
+    existBodyMeasurements.bmi = bmi;
+    existBodyMeasurements.date = date;
+    await existBodyMeasurements.save();
+    return existBodyMeasurements;
+  } else {
+    const bodyMeasurement = await BodyMeasurement.create({
+      user_id,
+      height,
+      weight,
+      bmi,
+      date,
+    });
+    return bodyMeasurement;
+  }
 };
 const singleMeasurement = async (_id: mongoose.Types.ObjectId) => {
   const measurement = await BodyMeasurement.findById(_id);
