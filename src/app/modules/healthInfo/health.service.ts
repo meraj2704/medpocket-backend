@@ -10,13 +10,13 @@ const CreateBodyMeasurements = async (
   const bmi = +(weight / Math.pow(height / 100, 2)).toFixed(1);
   let existBodyMeasurements = await BodyMeasurement.findOne({
     user_id,
-    date: { $gte: startOfDay, $lte: endOfDay },
+    date: { $gte: startOfDay(), $lte: endOfDay() },
   });
   if (existBodyMeasurements) {
     existBodyMeasurements.height = height;
     existBodyMeasurements.weight = weight;
     existBodyMeasurements.bmi = bmi;
-    existBodyMeasurements.date = today;
+    existBodyMeasurements.date = today();
     await existBodyMeasurements.save();
     return existBodyMeasurements;
   } else {
@@ -62,11 +62,11 @@ const createGlucose = async (
 ) => {
   const existTodayGlucose = await Glucose.findOne({
     user_id,
-    date: { $gte: startOfDay, $lte: endOfDay },
+    date: { $gte: startOfDay(), $lte: endOfDay() },
   });
   if (existTodayGlucose) {
     existTodayGlucose.glucose = glucose;
-    existTodayGlucose.date = today;
+    existTodayGlucose.date = today();
     await existTodayGlucose.save();
     return existTodayGlucose;
   } else {
@@ -110,12 +110,12 @@ const createPressure = async (
 ) => {
   const existTodayPressure = await Pressure.findOne({
     user_id,
-    date: { $gte: startOfDay, $lte: endOfDay },
+    date: { $gte: startOfDay(), $lte: endOfDay() },
   });
   if (existTodayPressure) {
     existTodayPressure.high_pressure = high_pressure;
     existTodayPressure.low_pressure = low_pressure;
-    existTodayPressure.date = today;
+    existTodayPressure.date = today();
     await existTodayPressure.save();
     return existTodayPressure;
   } else {
