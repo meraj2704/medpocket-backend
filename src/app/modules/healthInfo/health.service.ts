@@ -40,15 +40,14 @@ const measurementsByDays = async (
   user_id: mongoose.Types.ObjectId,
   days: number
 ) => {
-  // Calculate the date 'days' ago
   const dateForm = new Date();
-  dateForm.setDate(dateForm.getDate() - days);
-
-  // Fetch measurements from the database
+  dateForm.setDate(dateForm.getDate() - (days - 1));
+  dateForm.setHours(0, 0, 0, 0);
   const measurements = await BodyMeasurement.find({
     user_id,
     date: { $gte: dateForm },
   });
+
   return measurements;
 };
 
@@ -85,9 +84,8 @@ const glucoseByDays = async (
   days: number
 ) => {
   const dateForm = new Date();
-  dateForm.setDate(dateForm.getDate() - days);
-
-  // Fetch measurements from the database
+  dateForm.setDate(dateForm.getDate() - (days - 1));
+  dateForm.setHours(0, 0, 0, 0);
   const measurements = await Glucose.find({
     user_id,
     date: { $gte: dateForm },
@@ -124,9 +122,8 @@ const pressureByDays = async (
   days: number
 ) => {
   const dateForm = new Date();
-  dateForm.setDate(dateForm.getDate() - days);
-
-  // Fetch measurements from the database
+  dateForm.setDate(dateForm.getDate() - (days - 1));
+  dateForm.setHours(0, 0, 0, 0);
   const pressures = await Pressure.find({
     user_id,
     date: { $gte: dateForm },
