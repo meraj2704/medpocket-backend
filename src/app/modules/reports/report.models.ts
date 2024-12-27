@@ -3,6 +3,7 @@ import { ReportDocuments } from "./reports.interface";
 
 const ReportSchema = new Schema<ReportDocuments>({
   user_id:{type:Schema.Types.ObjectId,ref:"User",required:true},
+  name:{type:String, required:true},
   image_url: {type:String, required: true},
 })
 
