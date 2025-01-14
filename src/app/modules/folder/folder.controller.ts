@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { FolderServices } from "./folder.services";
-import { sendErrorResponse } from "../../utils/response";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
 import { userService } from "../user/user.services";
 import { IFolder } from "./folder.interface";
 
@@ -23,10 +23,22 @@ const createFolder = async (req: Request, res: Response) => {
     const folderData = {
       user_id,
       name,
-
     };
     const folder = await FolderServices.createFolder(folderData);
-  } catch (err) {}
+    if (folder) {
+      return sendSuccessResponse(
+        res,
+        folder,
+        "New Folder Created successfully",
+        201
+      );
+    } else {
+      return sendErrorResponse(res, "Failed to create new folder", [], 500);
+    }
+  } catch (err) {
+    console.error("Error creating folder: ", err);
+    return sendErrorResponse(res, "Failed to create folder", [], 500);
+  }
 };
 
 export const FolderControllers = {
