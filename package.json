@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node src/app.ts",
+    "start": "nodemon --exec ts-node src/app.js",
     "build": "tsc",
     "dev": "nodemon --exec ts-node src/app.ts"
   },
@@ -37,6 +37,9 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.12",
     "@types/nodemailer": "^6.4.16",
-    "@types/nodemon": "^1.19.6"
+    "@types/nodemon": "^1.19.6",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
   }
 }

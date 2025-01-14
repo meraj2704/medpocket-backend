@@ -13,6 +13,12 @@ router.post(
 );
 
 router.get("/profile/:user_id", UserControllers.getProfile);
-router.post("/profile-edit/:user_id",upload.single("file"), UserControllers.useProfileEdit);
+router.post(
+  "/profile-edit/:user_id",
+  upload.single("file"),
+  UserControllers.useProfileEdit
+);
+
+router.get("/all-users", UserControllers.getAllUsers);
 
 export const userRouter = router;

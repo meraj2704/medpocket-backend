@@ -31,8 +31,19 @@ const editProfile = async (user_id: string, data: UserInfoI) => {
   }
   return user;
 };
+const getAllUsers = async () => {
+  const users = await User.find();
+  return users;
+};
+
+const existUserWithId = async (user_id: string) => {
+  const user = await User.findById(user_id);
+  return user;
+};
 
 export const userService = {
   profileSetup,
   editProfile,
+  getAllUsers,
+  existUserWithId
 };

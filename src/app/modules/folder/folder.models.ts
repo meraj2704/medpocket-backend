@@ -11,4 +11,4 @@ const FolderSchema = new Schema<IFolder>(
   }
 );
 
-export const Glucose = mongoose.model<IFolder>("Glucose", FolderSchema);
+export const Folders = mongoose.model<IFolder>("Folders", FolderSchema);

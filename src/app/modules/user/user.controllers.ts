@@ -26,7 +26,7 @@ const userProfileSetup = async (req: Request, res: Response) => {
       height,
       weight
     );
-    
+
     if (!bodyMeasurements) {
       return sendErrorResponse(res, "Failed to create body measurements", 500);
     }
@@ -109,8 +109,20 @@ const getProfile = async (req: Request, res: Response) => {
   }
 };
 
+const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await userService.getAllUsers();
+    return sendSuccessResponse(res, users, "Users retrieved successfully", 200);
+  } catch (error) {
+    console.error(error);
+    console.log(error);
+    return sendErrorResponse(res, "Failed to retrieve users", 500);
+  }
+};
+
 export const UserControllers = {
   userProfileSetup,
   useProfileEdit,
   getProfile,
+  getAllUsers,
 };
