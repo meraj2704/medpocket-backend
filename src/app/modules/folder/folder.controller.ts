@@ -60,7 +60,12 @@ const getFolderByUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateFolder = async (req: Request, res: Response) => {
+
+}
+
 export const FolderControllers = {
   createFolder,
   getFolderByUser,
+  updateFolder
 };
