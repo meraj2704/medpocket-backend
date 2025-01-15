@@ -11,7 +11,15 @@ const createFolder = async (data: FolderData) => {
   return folder;
 };
 
+const foldersByUserId = async (userId: string) => {
+  const folders = await Folders.findById({ user_id: userId })
+    .select("_id name createdAt")
+    .lean();
+  return folders;
+};
+
 export const FolderServices = {
   existFolderWithName,
   createFolder,
+  foldersByUserId
 };

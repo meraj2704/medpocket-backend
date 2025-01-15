@@ -11,5 +11,7 @@ router.post(
   validate(FolderSchema.folderSchema),
   FolderControllers.createFolder
 );
+router.get("/all-folders/:id", FolderControllers.getFolderByUser);
 
 export const FolderRouter = router;
+ 

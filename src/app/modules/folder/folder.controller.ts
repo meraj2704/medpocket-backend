@@ -41,6 +41,26 @@ const createFolder = async (req: Request, res: Response) => {
   }
 };
 
+const getFolderByUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const userExist = await userService.existUserWithId(id);
+    if (!userExist) {
+      return sendErrorResponse(res, "User not found", [], 404);
+    }
+    const folders = await FolderServices.foldersByUserId(id);
+    return sendSuccessResponse(
+      res,
+      folders || [],
+      "Successfully fetched folders",
+      200
+    );
+  } catch (err) {
+    sendErrorResponse(res, "Failed to get folder", [], 500);
+  }
+};
+
 export const FolderControllers = {
   createFolder,
+  getFolderByUser,
 };
