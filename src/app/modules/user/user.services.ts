@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { User } from "../auth.ts/auth.models";
 import { UserInfoI } from "./user.interface";
 
@@ -36,7 +37,7 @@ const getAllUsers = async () => {
   return users;
 };
 
-const existUserWithId = async (user_id: string) => {
+const existUserWithId = async (user_id: mongoose.Types.ObjectId) => {
   const user = await User.findById(user_id);
   return user;
 };
@@ -44,6 +45,6 @@ const existUserWithId = async (user_id: string) => {
 export const userService = {
   profileSetup,
   editProfile,
-  getAllUsers,
-  existUserWithId
+  getAllUsers,  
+  existUserWithId,
 };

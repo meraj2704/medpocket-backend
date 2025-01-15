@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { FolderData, IFolder } from "./folder.interface";
 import { Folders } from "./folder.models";
 
@@ -11,15 +12,25 @@ const createFolder = async (data: FolderData) => {
   return folder;
 };
 
-const foldersByUserId = async (userId: string) => {
-  const folders = await Folders.findById({ user_id: userId })
+const foldersByUserId = async (userId: mongoose.Types.ObjectId) => {
+  const folders = await Folders.find({ user_id: userId })
     .select("_id name createdAt")
     .lean();
   return folders;
 };
 
+const folderUpdate = async (id: string, data: { name: string }) => {
+  const folder = await Folders.findByIdAndUpdate(
+    id,
+    { name: data.name },
+    { new: true }
+  );
+  return folder;
+};
+
 export const FolderServices = {
   existFolderWithName,
   createFolder,
-  foldersByUserId
+  foldersByUserId,
+  folderUpdate,
 };

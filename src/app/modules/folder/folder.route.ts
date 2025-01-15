@@ -12,6 +12,6 @@ router.post(
   FolderControllers.createFolder
 );
 router.get("/all-folders/:id", FolderControllers.getFolderByUser);
+router.put("/update-folder/:id", FolderControllers.updateFolder);
 
 export const FolderRouter = router;
- 

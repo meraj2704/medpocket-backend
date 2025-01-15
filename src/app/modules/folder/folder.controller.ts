@@ -3,6 +3,7 @@ import { FolderServices } from "./folder.services";
 import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
 import { userService } from "../user/user.services";
 import { IFolder } from "./folder.interface";
+import mongoose from "mongoose";
 
 const createFolder = async (req: Request, res: Response) => {
   const { name, user_id } = req.body;
@@ -43,12 +44,13 @@ const createFolder = async (req: Request, res: Response) => {
 
 const getFolderByUser = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const userId = new mongoose.Types.ObjectId(id);
   try {
-    const userExist = await userService.existUserWithId(id);
+    const userExist = await userService.existUserWithId(userId);
     if (!userExist) {
       return sendErrorResponse(res, "User not found", [], 404);
     }
-    const folders = await FolderServices.foldersByUserId(id);
+    const folders = await FolderServices.foldersByUserId(userId);
     return sendSuccessResponse(
       res,
       folders || [],
@@ -56,16 +58,28 @@ const getFolderByUser = async (req: Request, res: Response) => {
       200
     );
   } catch (err) {
+    console.log("error", err);
     sendErrorResponse(res, "Failed to get folder", [], 500);
   }
 };
 
 const updateFolder = async (req: Request, res: Response) => {
-
-}
+  const { id } = req.params;
+  const {name} = req.body;
+  try {
+    const folder = await FolderServices.folderUpdate(id, { name });
+    if (!folder) {
+      return sendErrorResponse(res, "Folder not found", [], 404);
+    }
+    return sendSuccessResponse(res, folder, "Folder updated successfully", 200);
+  } catch (err) {
+    console.error("Error updating folder: ", err);
+    return sendErrorResponse(res, "Failed to update folder", [], 500);
+  }
+};
 
 export const FolderControllers = {
   createFolder,
   getFolderByUser,
-  updateFolder
+  updateFolder,
 };
