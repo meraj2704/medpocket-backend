@@ -78,8 +78,23 @@ const updateFolder = async (req: Request, res: Response) => {
   }
 };
 
+const deleteFolder = async(req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const folder = await FolderServices.folderDelete(id);
+    if (!folder) {
+      return sendErrorResponse(res, "Folder not found", [], 404);
+    }
+    return sendSuccessResponse(res, folder, "Folder deleted successfully", 200);
+  } catch (err) {
+    console.error("Error deleting folder: ", err);
+    return sendErrorResponse(res, "Failed to delete folder", [], 500);
+  }
+}
+
 export const FolderControllers = {
   createFolder,
   getFolderByUser,
   updateFolder,
+  deleteFolder
 };

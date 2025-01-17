@@ -13,5 +13,7 @@ router.post(
 );
 router.get("/all-folders/:id", FolderControllers.getFolderByUser);
 router.put("/update-folder/:id", FolderControllers.updateFolder);
+router.delete("/delete-folder/:id", FolderControllers.deleteFolder);
 
 export const FolderRouter = router;
+12;

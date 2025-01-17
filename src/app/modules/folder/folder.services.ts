@@ -28,9 +28,15 @@ const folderUpdate = async (id: string, data: { name: string }) => {
   return folder;
 };
 
+const folderDelete = async (id: string) => {
+  const folder = await Folders.findByIdAndDelete(id);
+  return folder;
+};
+
 export const FolderServices = {
   existFolderWithName,
   createFolder,
   foldersByUserId,
   folderUpdate,
+  folderDelete,
 };
