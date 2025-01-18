@@ -1,20 +1,30 @@
 import mongoose from "mongoose";
-import { Report } from "./report.models";
+import { ReportBodyDataI, ReportI } from "./reports.interface";
+import { ReportModel } from "./report.models";
 
-const saveReport = async(id:mongoose.Types.ObjectId, image:string|undefined)=> {
-    const report = await Report.create({
-        user_id: id,
-        image_url: image,
-    });
-    return report;
-}
+const createNewReport = async (data: ReportBodyDataI) => {
+  const report = await ReportModel.create(data);
+  return report;
+};
 
-const getReportsByUserId = async(user_id: mongoose.Types.ObjectId)=> {
-    const reports = await Report.find({user_id: user_id});
-    return reports;
-}
+const allReportsInFolder = async (
+  folderId: mongoose.Types.ObjectId,
+  userId: mongoose.Types.ObjectId
+) => {
+  const reports = await ReportModel.find({
+    folderId,
+    userId,
+  });
+  return reports;
+};
 
-export const ReportService ={
-    saveReport,
-    getReportsByUserId,
-}
+// const getReportsByUserId = async(user_id: mongoose.Types.ObjectId)=> {
+//     const reports = await Report.find({user_id: user_id});
+//     return reports;
+// }
+
+export const ReportService = {
+  createNewReport,
+  allReportsInFolder,
+  // getReportsByUserId,
+};

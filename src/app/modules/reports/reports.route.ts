@@ -1,10 +1,18 @@
 import express from "express";
 import upload from "../../config/multer.config";
 import { reportControllers } from "./reports.controller";
+import validate from "../../middlewares/validate";
+import { ReportSchema } from "./reports.schema";
 const reportRouter = express.Router();
 
+reportRouter.post(
+  "/upload",
+  upload.array("images", 10),
+  validate(ReportSchema.reportSchema),
+  reportControllers.uploadReport
+);
 
-reportRouter.post('/upload/:user_id', upload.single('file'),reportControllers.uploadReport);
-reportRouter.get('/reports/:user_id', reportControllers.getReportsByUserId);
+reportRouter.get("/all-reports/:id", reportControllers.getAllReportsInFolder);
+// reportRouter.get("/reports/:id", reportControllers.getReportsByUserId);
 
 export default reportRouter;

@@ -7,6 +7,11 @@ const existFolderWithName = async (name: string) => {
   return folder;
 };
 
+const folderById = async (id: mongoose.Types.ObjectId) => {
+  const folder = await Folders.findById(id);
+  return folder;
+};
+
 const createFolder = async (data: FolderData) => {
   const folder = await Folders.create(data);
   return folder;
@@ -39,4 +44,5 @@ export const FolderServices = {
   foldersByUserId,
   folderUpdate,
   folderDelete,
+  folderById,
 };
