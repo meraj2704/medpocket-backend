@@ -13,6 +13,12 @@ reportRouter.post(
 );
 
 reportRouter.get("/all-reports/:id", reportControllers.getAllReportsInFolder);
+
+reportRouter.put(
+  "/update-report/:id",
+  upload.array("images", 10),
+  reportControllers.updateReport
+);
 // reportRouter.get("/reports/:id", reportControllers.getReportsByUserId);
 
 export default reportRouter;

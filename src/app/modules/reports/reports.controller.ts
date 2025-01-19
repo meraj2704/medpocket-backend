@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
 import { userService } from "../user/user.services";
 import { FolderServices } from "../folder/folder.services";
+import { UpdateReportI } from "./reports.interface";
 
 const uploadReport = async (req: Request, res: Response) => {
   const imageUrls = req.file
@@ -94,7 +95,58 @@ const getAllReportsInFolder = async (req: Request, res: Response) => {
   }
 };
 
+const updateReport = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { title, description, hospitalName } = req.body;
+  const imageUrls = req.file
+    ? [req.file.path]
+    : req.files
+    ? Array.isArray(req.files)
+      ? req.files.map((file) => file.path)
+      : []
+    : [];
+  try {
+    const existReport = await ReportService.existReport(id);
+    if (!existReport) {
+      return sendErrorResponse(res, "Report not found", [], 404);
+    }
+    const newData: UpdateReportI = {};
+    if (title) {
+      newData.title = title;
+    }
+    if (description) {
+      newData.description = description;
+    }
+    if (hospitalName) {
+      newData.hospitalName = hospitalName;
+    }
+    if (imageUrls.length > 0) {
+      newData.images = imageUrls;
+    }
+
+    console.log("title", title);
+
+    console.log("new report data", newData);
+
+    const updatedReport = await ReportService.updateReport(id, newData);
+    if (!updatedReport) {
+      return sendErrorResponse(res, "Failed to update report", [], 404);
+    }
+    return sendSuccessResponse(
+      res,
+      updatedReport,
+      "Report updated successfully",
+      200
+    );
+  } catch (error) {
+    console.error(error);
+    console.log(error);
+    return sendErrorResponse(res, "Failed to update report", [], 500);
+  }
+};
+
 export const reportControllers = {
   uploadReport,
   getAllReportsInFolder,
+  updateReport,
 };

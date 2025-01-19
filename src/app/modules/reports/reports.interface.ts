@@ -16,3 +16,10 @@ export interface ReportBodyDataI {
   hospitalName: string;
   images: string[];
 }
+
+export interface UpdateReportI {
+  title?: string;
+  description?: string;
+  hospitalName?: string;
+  images?: string[];
+}
