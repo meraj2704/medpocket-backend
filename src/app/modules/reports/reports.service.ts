@@ -28,6 +28,11 @@ const updateReport = async (id: string, data: UpdateReportI) => {
   return report;
 };
 
+const deleteReport = async (id: string) => {
+  const report = await ReportModel.findByIdAndDelete(id);
+  return report;
+};
+
 // const getReportsByUserId = async(user_id: mongoose.Types.ObjectId)=> {
 //     const reports = await Report.find({user_id: user_id});
 //     return reports;
@@ -38,5 +43,6 @@ export const ReportService = {
   allReportsInFolder,
   updateReport,
   existReport,
+  deleteReport,
   // getReportsByUserId,
 };

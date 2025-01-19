@@ -124,10 +124,6 @@ const updateReport = async (req: Request, res: Response) => {
       newData.images = imageUrls;
     }
 
-    console.log("title", title);
-
-    console.log("new report data", newData);
-
     const updatedReport = await ReportService.updateReport(id, newData);
     if (!updatedReport) {
       return sendErrorResponse(res, "Failed to update report", [], 404);
@@ -145,8 +141,33 @@ const updateReport = async (req: Request, res: Response) => {
   }
 };
 
+const deleteReport = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const existReport = await ReportService.existReport(id);
+    if (!existReport) {
+      return sendErrorResponse(res, "Report not found", [], 404);
+    }
+    const deletedReport = await ReportService.deleteReport(id);
+    if (!deletedReport) {
+      return sendErrorResponse(res, "Failed to delete report", [], 404);
+    }
+    return sendSuccessResponse(
+      res,
+      deletedReport,
+      "Report deleted successfully",
+      200
+    );
+  } catch (error) {
+    console.error(error);
+    console.log(error);
+    return sendErrorResponse(res, "Failed to delete report", [], 500);
+  }
+};
+
 export const reportControllers = {
   uploadReport,
   getAllReportsInFolder,
   updateReport,
+  deleteReport,
 };

@@ -19,6 +19,8 @@ reportRouter.put(
   upload.array("images", 10),
   reportControllers.updateReport
 );
+
+reportRouter.delete("/delete-report/:id", reportControllers.deleteReport);
 // reportRouter.get("/reports/:id", reportControllers.getReportsByUserId);
 
 export default reportRouter;
