@@ -18,4 +18,6 @@ router.get("/get-today-medicines/:id", MedicationControllers.getTodayMedicines);
 
 router.delete("/delete-medicine/:id", MedicationControllers.deleteMedicine);
 
+router.put("/update-medicine/:id", MedicationControllers.updateMedicine);
+
 export const MedicineRouter = router;

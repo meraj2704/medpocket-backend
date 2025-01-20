@@ -22,3 +22,13 @@ export interface MedicationI {
     end: Date;
   };
 }
+export interface UpdateMedicationI {
+  medicineName?: string;
+  type?: string;
+  description?: string;
+  dosage?: DosageI;
+  duration?: {
+    start: Date;
+    end: Date;
+  };
+}

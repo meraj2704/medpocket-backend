@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { MedicationI } from "./medicine.interfaces";
+import { MedicationI, UpdateMedicationI } from "./medicine.interfaces";
 import { MedicationModel } from "./medicine.model";
 
 const newMedicine = async (data: MedicationI) => {
@@ -31,9 +31,20 @@ const deleteMedicine = async (id: mongoose.Types.ObjectId) => {
   return deleteMedicine;
 };
 
+const updateMedication = async (
+  id: mongoose.Types.ObjectId,
+  data: UpdateMedicationI
+) => {
+  const updatedMedicine = await MedicationModel.findByIdAndUpdate(id, data, {
+    new: true,
+  });
+  return updatedMedicine;
+};
+
 export const MedicineServices = {
   newMedicine,
   getMedicines,
   todayMedicines,
   deleteMedicine,
+  updateMedication,
 };

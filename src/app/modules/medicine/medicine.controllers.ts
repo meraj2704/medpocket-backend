@@ -102,9 +102,37 @@ const deleteMedicine = async (req: Request, res: Response) => {
     return sendErrorResponse(res, "Failed to delete medicine", [], 500);
   }
 };
+
+const updateMedicine = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const newId = new mongoose.Types.ObjectId(id);
+  const { medicineName, type, description, dosage, duration } = req.body;
+  try {
+    const medicine = await MedicineServices.updateMedication(newId, {
+      medicineName,
+      type,
+      description,
+      dosage,
+      duration,
+    });
+    if (!medicine) {
+      return sendErrorResponse(res, "Medicine not found", [], 404);
+    }
+    return sendSuccessResponse(
+      res,
+      medicine,
+      "Successfully updated medicine",
+      200
+    );
+  } catch (err) {
+    console.error("Error updating medicine: ", err);
+    return sendErrorResponse(res, "Failed to update medicine", [], 500);
+  }
+};
 export const MedicationControllers = {
   addMedicine,
   getAllMedicine,
   getTodayMedicines,
   deleteMedicine,
+  updateMedicine,
 };
