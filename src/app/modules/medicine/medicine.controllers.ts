@@ -66,7 +66,29 @@ const getAllMedicine = async (req: Request, res: Response) => {
     return sendErrorResponse(res, "Failed to fetch medicines", [], 500);
   }
 };
+
+const getTodayMedicines = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userId = new mongoose.Types.ObjectId(id);
+  try {
+    const userExist = await userService.existUserWithId(userId);
+    if (!userExist) {
+      return sendErrorResponse(res, "User not found", [], 404);
+    }
+    const todayMedicines = await MedicineServices.todayMedicines(userId);
+    return sendSuccessResponse(
+      res,
+      todayMedicines,
+      "Successfully fetched today medicines",
+      200
+    );
+  } catch (err) {
+    console.error(err);
+    return sendErrorResponse(res, "Failed to fetch today medicines", [], 500);
+  }
+};
 export const MedicationControllers = {
   addMedicine,
   getAllMedicine,
+  getTodayMedicines,
 };

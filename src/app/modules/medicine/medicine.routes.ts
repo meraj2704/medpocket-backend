@@ -14,4 +14,6 @@ router.post(
 
 router.get("/get-all-medicines/:id", MedicationControllers.getAllMedicine);
 
+router.get("/get-today-medicines/:id", MedicationControllers.getTodayMedicines);
+
 export const MedicineRouter = router;
