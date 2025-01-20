@@ -1,4 +1,15 @@
 import express from "express";
-const route = express.Router();
+import upload from "../../config/multer.config";
+import validate from "../../middlewares/validate";
+import { MedicineSchema } from "./medicine.schema";
+import { MedicationControllers } from "./medicine.controllers";
+const router = express.Router();
 
-export const MedicineRouter = route;
+router.post(
+  "/add-new-medicine",
+  upload.none(),
+  validate(MedicineSchema.medicineSchema),
+  MedicationControllers.addMedicine
+);
+
+export const MedicineRouter = router;

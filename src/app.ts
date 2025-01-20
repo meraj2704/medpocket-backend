@@ -9,6 +9,7 @@ import { userRouter } from "./app/modules/user/user.route";
 import reportRouter from "./app/modules/reports/reports.route";
 import homeRouter from "./app/modules/home/home.route";
 import { FolderRouter } from "./app/modules/folder/folder.route";
+import { MedicineRouter } from "./app/modules/medicine/medicine.routes";
 
 const app: Application = express();
 const PORT = process.env.PORT || 4040;
@@ -32,6 +33,7 @@ app.use("/api/health", healthRouter);
 app.use("/api/report", reportRouter);
 app.use("/api/home", homeRouter);
 app.use("/api/folder", FolderRouter);
+app.use("/api/medicine", MedicineRouter);
 
 logRoutes(app);
 app.use(errorHandler);
