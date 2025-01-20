@@ -12,23 +12,28 @@ const getMedicines = async (userId: mongoose.Types.ObjectId) => {
   return medicines;
 };
 const todayMedicines = async (userId: mongoose.Types.ObjectId) => {
-  const today = new Date(); // Current date and time
-  today.setUTCHours(0, 0, 0, 0); // Set to midnight UTC
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
   console.log("today (midnight UTC):", today);
 
-  // Fetch medicines where the start date is on or before today and the end date is on or after today
   const medicines = await MedicationModel.find({
     userId,
-    "duration.start": { $lte: today }, // Medicines starting on or before today
-    "duration.end": { $gte: today }, // Medicines ending on or after today
+    "duration.start": { $lte: today },
+    "duration.end": { $gte: today },
   });
 
   console.log("medicines (today):", medicines);
   return medicines;
 };
 
+const deleteMedicine = async (id: mongoose.Types.ObjectId) => {
+  const deleteMedicine = await MedicationModel.findByIdAndDelete({ _id: id });
+  return deleteMedicine;
+};
+
 export const MedicineServices = {
   newMedicine,
   getMedicines,
   todayMedicines,
+  deleteMedicine,
 };

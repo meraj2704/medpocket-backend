@@ -16,4 +16,6 @@ router.get("/get-all-medicines/:id", MedicationControllers.getAllMedicine);
 
 router.get("/get-today-medicines/:id", MedicationControllers.getTodayMedicines);
 
+router.delete("/delete-medicine/:id", MedicationControllers.deleteMedicine);
+
 export const MedicineRouter = router;
