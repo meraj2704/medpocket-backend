@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
 import { userService } from "../user/user.services";
 import { MedicineServices } from "./medicine.services";
+import mongoose from "mongoose";
 
 const addMedicine = async (req: Request, res: Response) => {
   const { userId, medicineName, type, description, dosage, duration } =
@@ -36,6 +37,36 @@ const addMedicine = async (req: Request, res: Response) => {
     return sendErrorResponse(res, "Failed to add medicine", [], 500);
   }
 };
+
+const getAllMedicine = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userId = new mongoose.Types.ObjectId(id);
+  try {
+    const userExist = await userService.existUserWithId(userId);
+    if (!userExist) {
+      return sendErrorResponse(res, "User not found", [], 404);
+    }
+    const medicines = await MedicineServices.getMedicines(userId);
+    if (!medicines) {
+      return sendErrorResponse(
+        res,
+        "No medicines found for this user",
+        [],
+        404
+      );
+    }
+    return sendSuccessResponse(
+      res,
+      medicines,
+      "Successfully fetched medicines",
+      200
+    );
+  } catch (err) {
+    console.error(err);
+    return sendErrorResponse(res, "Failed to fetch medicines", [], 500);
+  }
+};
 export const MedicationControllers = {
   addMedicine,
+  getAllMedicine,
 };
