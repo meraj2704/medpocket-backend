@@ -5,7 +5,7 @@ import { MedicineServices } from "./medicine.services";
 import mongoose, { mongo } from "mongoose";
 const addMedicine = async (req: Request, res: Response) => {
   const medicines = req.body;
-  console.log("medicines", medicines) // Expecting an array of medicine objects
+  console.log("medicines", medicines); // Expecting an array of medicine objects
   if (!Array.isArray(medicines)) {
     return sendErrorResponse(
       res,
@@ -112,9 +112,57 @@ const getTodayMedicines = async (req: Request, res: Response) => {
       return sendErrorResponse(res, "User not found", [], 404);
     }
     const todayMedicines = await MedicineServices.todayMedicines(userId);
+
+    const medicinesDosage: {
+      morning: {
+        _id: mongoose.Types.ObjectId;
+        medicineName: string;
+        type: string;
+        afterMeal: boolean;
+      }[];
+      afternoon: {
+        _id: mongoose.Types.ObjectId;
+        medicineName: string;
+        type: string;
+        afterMeal: boolean;
+      }[];
+      evening: {
+        _id: mongoose.Types.ObjectId;
+        medicineName: string;
+        type: string;
+        afterMeal: boolean;
+      }[];
+    } = {
+      morning: [],
+      afternoon: [],
+      evening: [],
+    };
+
+    todayMedicines.forEach((item) => {
+      const medicineInfo = {
+        _id: item._id,
+        medicineName: item.medicineName,
+        type: item.type,
+        afterMeal: false,
+      };
+
+      if (item.dosage.morning.take) {
+        medicineInfo.afterMeal = item.dosage.morning.afterMeal;
+        medicinesDosage.morning.push(medicineInfo);
+      }
+      if (item.dosage.afternoon.take) {
+        medicineInfo.afterMeal = item.dosage.afternoon.afterMeal;
+        medicinesDosage.afternoon.push(medicineInfo);
+      }
+      if (item.dosage.evening.take) {
+        medicineInfo.afterMeal = item.dosage.evening.afterMeal;
+        medicinesDosage.evening.push(medicineInfo);
+      }
+    });
+
     return sendSuccessResponse(
       res,
-      todayMedicines,
+      medicinesDosage,
       "Successfully fetched today medicines",
       200
     );
