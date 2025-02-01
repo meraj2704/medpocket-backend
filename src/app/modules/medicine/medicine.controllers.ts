@@ -3,38 +3,74 @@ import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
 import { userService } from "../user/user.services";
 import { MedicineServices } from "./medicine.services";
 import mongoose, { mongo } from "mongoose";
-
 const addMedicine = async (req: Request, res: Response) => {
-  const { userId, medicineName, type, description, dosage, duration } =
-    req.body;
+  const medicines = req.body;
+  console.log("medicines", medicines) // Expecting an array of medicine objects
+  if (!Array.isArray(medicines)) {
+    return sendErrorResponse(
+      res,
+      "Invalid data format. Expected an array.",
+      [],
+      400
+    );
+  }
+
   try {
-    const newMedicineData = {
-      userId,
-      medicineName,
-      type,
-      description,
-      dosage,
-      duration,
-    };
+    const addedMedicines = [];
 
-    const existUser = await userService.existUserWithId(userId);
-    if (!existUser) {
-      return sendErrorResponse(res, "User not found", [], 404);
+    for (const medicineData of medicines) {
+      const { userId, medicineName, type, description, dosage, duration } =
+        medicineData;
+
+      // Validate required fields
+      if (!userId || !medicineName) {
+        return sendErrorResponse(
+          res,
+          "Missing required fields: userId and medicineName are mandatory",
+          [],
+          400
+        );
+      }
+
+      const existUser = await userService.existUserWithId(userId);
+      if (!existUser) {
+        return sendErrorResponse(
+          res,
+          `User with ID ${userId} not found`,
+          [],
+          404
+        );
+      }
+
+      const newMedicineData = {
+        userId,
+        medicineName,
+        type,
+        description,
+        dosage,
+        duration,
+      };
+
+      const newMedicine = await MedicineServices.newMedicine(newMedicineData);
+
+      if (newMedicine) {
+        addedMedicines.push(newMedicine);
+      }
     }
 
-    const newMedicine = await MedicineServices.newMedicine(newMedicineData);
-    if (!newMedicine) {
-      return sendErrorResponse(res, "Failed to add medicine", [], 500);
+    if (addedMedicines.length === 0) {
+      return sendErrorResponse(res, "No medicines were added", [], 500);
     }
+
     return sendSuccessResponse(
       res,
-      newMedicine,
-      "Successfully added new medicine",
+      addedMedicines,
+      "Successfully added new medicines",
       201
     );
   } catch (err) {
     console.error(err);
-    return sendErrorResponse(res, "Failed to add medicine", [], 500);
+    return sendErrorResponse(res, "Failed to add medicines", [], 500);
   }
 };
 
