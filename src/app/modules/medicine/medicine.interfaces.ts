@@ -38,8 +38,8 @@ interface ISlotStatus {
 }
 
 export interface IMedicineTracking {
-  userID: mongoose.Types.ObjectId;
-  medicineID: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
+  medicineId: mongoose.Types.ObjectId;
   date: Date;
   slots: {
     morning: ISlotStatus;

@@ -39,8 +39,8 @@ export const MedicationModel = mongoose.model<MedicationI>(
 );
 
 const MedicineTrackingSchema = new Schema<IMedicineTracking>({
-  userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  medicineID: {
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  medicineId: {
     type: Schema.Types.ObjectId,
     ref: "MedicationModel",
     required: true,

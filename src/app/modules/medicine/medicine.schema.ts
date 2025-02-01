@@ -12,8 +12,14 @@ const dosesSchema = z.object({
 });
 
 const durationSchema = z.object({
-  start: z.preprocess((arg) => (typeof arg === "string" ? new Date(arg) : arg), z.date()),
-  end: z.preprocess((arg) => (typeof arg === "string" ? new Date(arg) : arg), z.date()),
+  start: z.preprocess(
+    (arg) => (typeof arg === "string" ? new Date(arg) : arg),
+    z.date()
+  ),
+  end: z.preprocess(
+    (arg) => (typeof arg === "string" ? new Date(arg) : arg),
+    z.date()
+  ),
 });
 
 const singleMedicineSchema = z.object({
@@ -29,6 +35,22 @@ const medicineSchema = z.object({
   body: z.array(singleMedicineSchema),
 });
 
+const markAsUpdateSchema = z.object({
+  body: z.object({
+    medicineId: z.string().min(1, "Medicine Id is required"),
+    userId: z.string().min(1, "User Id is required"),
+    slotName: z.enum(["morning", "afternoon", "evening"], {
+      errorMap: () => ({
+        message: "Slot Name must be morning, afternoon, or evening",
+      }),
+    }),
+    hasTaken: z.boolean().refine((value) => value === true, {
+      message: "hasTaken must always be true",
+    }),
+  }),
+});
+
 export const MedicineSchema = {
   medicineSchema,
+  markAsUpdateSchema
 };

@@ -20,4 +20,11 @@ router.delete("/delete-medicine/:id", MedicationControllers.deleteMedicine);
 
 router.put("/update-medicine/:id", MedicationControllers.updateMedicine);
 
+router.put(
+  "/mark-as-taken",
+  upload.none(),
+  validate(MedicineSchema.markAsUpdateSchema),
+  MedicationControllers.markAsTaken
+);
+
 export const MedicineRouter = router;

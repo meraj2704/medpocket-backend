@@ -114,6 +114,8 @@ const getTodayMedicines = async (req: Request, res: Response) => {
     const todayMedicines = await MedicineServices.todayMedicines(userId);
     const trackingTodayMedicineData =
       await MedicineServices.getTodayMedicineTracking(userId);
+
+    console.log("trackingTodayMedicineData", trackingTodayMedicineData);
     const medicinesDosage: {
       morning: {
         _id: mongoose.Types.ObjectId;
@@ -143,36 +145,48 @@ const getTodayMedicines = async (req: Request, res: Response) => {
     };
 
     todayMedicines.forEach((item) => {
+      console.log("item: ", item);
+    
       const matchingTracking = trackingTodayMedicineData.find(
-        (tracking) => item._id === tracking.medicineID
+        (tracking) => item._id.equals(tracking.medicineId)
       );
-      const medicineInfo = {
-        _id: item._id,
-        medicineName: item.medicineName,
-        type: item.type,
-        afterMeal: false,
-        hasTaken: false,
-      };
-
+      
+      console.log("matching tracking", matchingTracking);
+    
       if (item.dosage.morning.take) {
-        medicineInfo.afterMeal = item.dosage.morning.afterMeal;
-        medicineInfo.hasTaken =
-          matchingTracking?.slots.morning.hasTaken || false;
-        medicinesDosage.morning.push(medicineInfo);
+        const morningInfo = {
+          _id: item._id,
+          medicineName: item.medicineName,
+          type: item.type,
+          afterMeal: item.dosage.morning.afterMeal,
+          hasTaken: matchingTracking?.slots.morning.hasTaken || false,
+        };
+        medicinesDosage.morning.push(morningInfo);
       }
+    
       if (item.dosage.afternoon.take) {
-        medicineInfo.afterMeal = item.dosage.afternoon.afterMeal;
-        medicineInfo.hasTaken =
-          matchingTracking?.slots.afterNoon.hasTaken || false;
-        medicinesDosage.afternoon.push(medicineInfo);
+        const afternoonInfo = {
+          _id: item._id,
+          medicineName: item.medicineName,
+          type: item.type,
+          afterMeal: item.dosage.afternoon.afterMeal,
+          hasTaken: matchingTracking?.slots.afterNoon.hasTaken || false,
+        };
+        medicinesDosage.afternoon.push(afternoonInfo);
       }
+    
       if (item.dosage.evening.take) {
-        medicineInfo.afterMeal = item.dosage.evening.afterMeal;
-        medicineInfo.hasTaken =
-          matchingTracking?.slots.evening.hasTaken || false;
-        medicinesDosage.evening.push(medicineInfo);
+        const eveningInfo = {
+          _id: item._id,
+          medicineName: item.medicineName,
+          type: item.type,
+          afterMeal: item.dosage.evening.afterMeal,
+          hasTaken: matchingTracking?.slots.evening.hasTaken || false,
+        };
+        medicinesDosage.evening.push(eveningInfo);
       }
     });
+    
 
     return sendSuccessResponse(
       res,
@@ -183,6 +197,35 @@ const getTodayMedicines = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     return sendErrorResponse(res, "Failed to fetch today medicines", [], 500);
+  }
+};
+
+const markAsTaken = async (req: Request, res: Response) => {
+  const { userId, medicineId, slotName, hasTaken } = req.body;
+  const newUserId = new mongoose.Types.ObjectId(userId);
+  const medicineIdObj = new mongoose.Types.ObjectId(medicineId);
+  try {
+    const updatedMedicineSlot = await MedicineServices.markAsTaken(
+      newUserId,
+      medicineIdObj,
+      {
+        [slotName]: {
+          hasTaken,
+        },
+      }
+    );
+    if (!updatedMedicineSlot) {
+      return sendErrorResponse(res, "Medicine slot not found", [], 404);
+    }
+    return sendSuccessResponse(
+      res,
+      updatedMedicineSlot,
+      "Medicine slot marked as taken",
+      200
+    );
+  } catch (err) {
+    console.error("Error updating medicine: ", err);
+    return sendErrorResponse(res, "Failed to update medicine", [], 500);
   }
 };
 
@@ -227,10 +270,12 @@ const updateMedicine = async (req: Request, res: Response) => {
     return sendErrorResponse(res, "Failed to update medicine", [], 500);
   }
 };
+
 export const MedicationControllers = {
   addMedicine,
   getAllMedicine,
   getTodayMedicines,
   deleteMedicine,
   updateMedicine,
+  markAsTaken,
 };
