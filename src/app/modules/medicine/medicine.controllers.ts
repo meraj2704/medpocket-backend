@@ -112,25 +112,29 @@ const getTodayMedicines = async (req: Request, res: Response) => {
       return sendErrorResponse(res, "User not found", [], 404);
     }
     const todayMedicines = await MedicineServices.todayMedicines(userId);
-
+    const trackingTodayMedicineData =
+      await MedicineServices.getTodayMedicineTracking(userId);
     const medicinesDosage: {
       morning: {
         _id: mongoose.Types.ObjectId;
         medicineName: string;
         type: string;
         afterMeal: boolean;
+        hasTaken: boolean;
       }[];
       afternoon: {
         _id: mongoose.Types.ObjectId;
         medicineName: string;
         type: string;
         afterMeal: boolean;
+        hasTaken: boolean;
       }[];
       evening: {
         _id: mongoose.Types.ObjectId;
         medicineName: string;
         type: string;
         afterMeal: boolean;
+        hasTaken: boolean;
       }[];
     } = {
       morning: [],
@@ -139,23 +143,33 @@ const getTodayMedicines = async (req: Request, res: Response) => {
     };
 
     todayMedicines.forEach((item) => {
+      const matchingTracking = trackingTodayMedicineData.find(
+        (tracking) => item._id === tracking.medicineID
+      );
       const medicineInfo = {
         _id: item._id,
         medicineName: item.medicineName,
         type: item.type,
         afterMeal: false,
+        hasTaken: false,
       };
 
       if (item.dosage.morning.take) {
         medicineInfo.afterMeal = item.dosage.morning.afterMeal;
+        medicineInfo.hasTaken =
+          matchingTracking?.slots.morning.hasTaken || false;
         medicinesDosage.morning.push(medicineInfo);
       }
       if (item.dosage.afternoon.take) {
         medicineInfo.afterMeal = item.dosage.afternoon.afterMeal;
+        medicineInfo.hasTaken =
+          matchingTracking?.slots.afterNoon.hasTaken || false;
         medicinesDosage.afternoon.push(medicineInfo);
       }
       if (item.dosage.evening.take) {
         medicineInfo.afterMeal = item.dosage.evening.afterMeal;
+        medicineInfo.hasTaken =
+          matchingTracking?.slots.evening.hasTaken || false;
         medicinesDosage.evening.push(medicineInfo);
       }
     });

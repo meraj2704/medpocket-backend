@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { MedicationI, UpdateMedicationI } from "./medicine.interfaces";
-import { MedicationModel } from "./medicine.model";
+import { MedicationModel, MedicineTrackingModel } from "./medicine.model";
 
 const newMedicine = async (data: MedicationI) => {
   const medicine = await MedicationModel.create(data);
@@ -26,6 +26,12 @@ const todayMedicines = async (userId: mongoose.Types.ObjectId) => {
   return medicines;
 };
 
+const getTodayMedicineTracking = async(userId:mongoose.Types.ObjectId)=>{
+  const today = new Date();
+  const medicineTracking = await MedicineTrackingModel.find({userId, date:today});
+  return medicineTracking;
+}
+
 const deleteMedicine = async (id: mongoose.Types.ObjectId) => {
   const deleteMedicine = await MedicationModel.findByIdAndDelete({ _id: id });
   return deleteMedicine;
@@ -47,4 +53,5 @@ export const MedicineServices = {
   todayMedicines,
   deleteMedicine,
   updateMedication,
+  getTodayMedicineTracking
 };

@@ -32,3 +32,18 @@ export interface UpdateMedicationI {
     end: Date;
   };
 }
+
+interface ISlotStatus {
+  hasTaken: boolean;
+}
+
+export interface IMedicineTracking {
+  userID: mongoose.Types.ObjectId;
+  medicineID: mongoose.Types.ObjectId;
+  date: Date;
+  slots: {
+    morning: ISlotStatus;
+    afterNoon: ISlotStatus;
+    evening: ISlotStatus;
+  };
+}

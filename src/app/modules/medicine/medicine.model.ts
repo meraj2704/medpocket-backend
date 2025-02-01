@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { DosageI, MedicationI } from "./medicine.interfaces";
+import { DosageI, IMedicineTracking, MedicationI } from "./medicine.interfaces";
 
 const DosageSchema = new Schema<DosageI>({
   morning: {
@@ -36,4 +36,24 @@ const MedicineSchema = new Schema<MedicationI>(
 export const MedicationModel = mongoose.model<MedicationI>(
   "MedicationModel",
   MedicineSchema
+);
+
+const MedicineTrackingSchema = new Schema<IMedicineTracking>({
+  userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  medicineID: {
+    type: Schema.Types.ObjectId,
+    ref: "MedicationModel",
+    required: true,
+  },
+  date: { type: Date, required: true },
+  slots: {
+    morning: { hasTaken: { type: Boolean, default: false } },
+    afterNoon: { hasTaken: { type: Boolean, default: false } },
+    evening: { hasTaken: { type: Boolean, default: false } },
+  },
+});
+
+export const MedicineTrackingModel = mongoose.model<IMedicineTracking>(
+  "MedicineTrackingModel",
+  MedicineTrackingSchema
 );
