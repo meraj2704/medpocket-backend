@@ -37,13 +37,20 @@ interface ISlotStatus {
   hasTaken: boolean;
 }
 
+export interface TodayMedicineDosage extends ISlotStatus {
+  _id: mongoose.Types.ObjectId;
+  medicineName: string;
+  type: string;
+  afterMeal: boolean;
+}
+
 export interface IMedicineTracking {
   userId: mongoose.Types.ObjectId;
   medicineId: mongoose.Types.ObjectId;
   date: Date;
   slots: {
-    morning: ISlotStatus;
-    afterNoon: ISlotStatus;
-    evening: ISlotStatus;
+    morning: boolean;
+    afternoon: boolean;
+    evening: boolean;
   };
 }

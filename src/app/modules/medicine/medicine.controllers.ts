@@ -3,9 +3,10 @@ import { sendErrorResponse, sendSuccessResponse } from "../../utils/response";
 import { userService } from "../user/user.services";
 import { MedicineServices } from "./medicine.services";
 import mongoose, { mongo } from "mongoose";
+import { TodayMedicineDosage } from "./medicine.interfaces";
 const addMedicine = async (req: Request, res: Response) => {
   const medicines = req.body;
-  console.log("medicines", medicines); // Expecting an array of medicine objects
+  console.log("medicines", medicines);
   if (!Array.isArray(medicines)) {
     return sendErrorResponse(
       res,
@@ -117,27 +118,9 @@ const getTodayMedicines = async (req: Request, res: Response) => {
 
     console.log("trackingTodayMedicineData", trackingTodayMedicineData);
     const medicinesDosage: {
-      morning: {
-        _id: mongoose.Types.ObjectId;
-        medicineName: string;
-        type: string;
-        afterMeal: boolean;
-        hasTaken: boolean;
-      }[];
-      afternoon: {
-        _id: mongoose.Types.ObjectId;
-        medicineName: string;
-        type: string;
-        afterMeal: boolean;
-        hasTaken: boolean;
-      }[];
-      evening: {
-        _id: mongoose.Types.ObjectId;
-        medicineName: string;
-        type: string;
-        afterMeal: boolean;
-        hasTaken: boolean;
-      }[];
+      morning: TodayMedicineDosage[];
+      afternoon: TodayMedicineDosage[];
+      evening: TodayMedicineDosage[];
     } = {
       morning: [],
       afternoon: [],
@@ -146,47 +129,46 @@ const getTodayMedicines = async (req: Request, res: Response) => {
 
     todayMedicines.forEach((item) => {
       console.log("item: ", item);
-    
-      const matchingTracking = trackingTodayMedicineData.find(
-        (tracking) => item._id.equals(tracking.medicineId)
+
+      const matchingTracking = trackingTodayMedicineData.find((tracking) =>
+        item._id.equals(tracking.medicineId)
       );
-      
+
       console.log("matching tracking", matchingTracking);
-    
+
       if (item.dosage.morning.take) {
         const morningInfo = {
           _id: item._id,
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.morning.afterMeal,
-          hasTaken: matchingTracking?.slots.morning.hasTaken || false,
+          hasTaken: matchingTracking?.slots.morning || false,
         };
         medicinesDosage.morning.push(morningInfo);
       }
-    
+
       if (item.dosage.afternoon.take) {
         const afternoonInfo = {
           _id: item._id,
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.afternoon.afterMeal,
-          hasTaken: matchingTracking?.slots.afterNoon.hasTaken || false,
+          hasTaken: matchingTracking?.slots.afternoon || false,
         };
         medicinesDosage.afternoon.push(afternoonInfo);
       }
-    
+
       if (item.dosage.evening.take) {
         const eveningInfo = {
           _id: item._id,
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.evening.afterMeal,
-          hasTaken: matchingTracking?.slots.evening.hasTaken || false,
+          hasTaken: matchingTracking?.slots.evening || false,
         };
         medicinesDosage.evening.push(eveningInfo);
       }
     });
-    
 
     return sendSuccessResponse(
       res,
@@ -208,11 +190,8 @@ const markAsTaken = async (req: Request, res: Response) => {
     const updatedMedicineSlot = await MedicineServices.markAsTaken(
       newUserId,
       medicineIdObj,
-      {
-        [slotName]: {
-          hasTaken,
-        },
-      }
+      slotName,
+      hasTaken
     );
     if (!updatedMedicineSlot) {
       return sendErrorResponse(res, "Medicine slot not found", [], 404);

@@ -47,9 +47,9 @@ const MedicineTrackingSchema = new Schema<IMedicineTracking>({
   },
   date: { type: Date, required: true },
   slots: {
-    morning: { hasTaken: { type: Boolean, default: false } },
-    afterNoon: { hasTaken: { type: Boolean, default: false } },
-    evening: { hasTaken: { type: Boolean, default: false } },
+    morning: { type: Boolean, default: false },
+    afternoon: { type: Boolean, default: false },
+    evening: { type: Boolean, default: false },
   },
 });
 

@@ -22,7 +22,7 @@ const todayMedicines = async (userId: mongoose.Types.ObjectId) => {
     "duration.end": { $gte: today },
   });
 
-  console.log("medicines (today):", medicines);
+  // console.log("medicines (today):", medicines);
   return medicines;
 };
 
@@ -41,23 +41,37 @@ const getTodayMedicineTracking = async (userId: mongoose.Types.ObjectId) => {
     },
   });
 
+  console.log("today tracking medicine", medicineTracking);
+
   return medicineTracking;
 };
-
 
 const markAsTaken = async (
   userId: mongoose.Types.ObjectId,
   medicineId: mongoose.Types.ObjectId,
-  slots: {
-    [key: string]:{
-      hasTaken: boolean;
-    }
-  }
+  slotName: string,
+  hasTaken: boolean
 ) => {
   const today = new Date();
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
   const medicineTracking = await MedicineTrackingModel.findOneAndUpdate(
-    { userId, medicineId, date: today },
-    { slots },
+    {
+      userId,
+      medicineId,
+      date: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    },
+    {
+      slots: {
+        [slotName]: hasTaken,
+      },
+    },
     { upsert: true, new: true }
   );
   return medicineTracking;
