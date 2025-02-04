@@ -201,6 +201,11 @@ const markAsTaken = async (req: Request, res: Response) => {
       updatedMedicineSlot,
       "Medicine slot marked as taken",
       200
+    ); return sendSuccessResponse(
+      res,
+      updatedMedicineSlot,
+      "Medicine slot marked as taken",
+      200
     );
   } catch (err) {
     console.error("Error updating medicine: ", err);
