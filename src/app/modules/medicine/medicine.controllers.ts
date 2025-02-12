@@ -103,20 +103,20 @@ const getAllMedicine = async (req: Request, res: Response) => {
     return sendErrorResponse(res, "Failed to fetch medicines", [], 500);
   }
 };
-
 const getTodayMedicines = async (req: Request, res: Response) => {
   const { id } = req.params;
   const userId = new mongoose.Types.ObjectId(id);
+
   try {
     const userExist = await userService.existUserWithId(userId);
     if (!userExist) {
       return sendErrorResponse(res, "User not found", [], 404);
     }
+
     const todayMedicines = await MedicineServices.todayMedicines(userId);
     const trackingTodayMedicineData =
       await MedicineServices.getTodayMedicineTracking(userId);
 
-    console.log("trackingTodayMedicineData", trackingTodayMedicineData);
     let medicinesDosage: {
       morning: TodayMedicineDosage[];
       afternoon: TodayMedicineDosage[];
@@ -128,51 +128,50 @@ const getTodayMedicines = async (req: Request, res: Response) => {
     };
 
     todayMedicines.forEach((item) => {
-      console.log("item: ", item);
-
       const matchingTracking = trackingTodayMedicineData.find((tracking) =>
         item._id.equals(tracking.medicineId)
       );
 
-      console.log("matching tracking", matchingTracking);
+      // ✅ Ensure `hasTaken` is always `false` by default
+      const hasTakenDefault = (slot: 'morning' | 'afternoon' | 'evening') => {
+        return matchingTracking?.slots?.[slot] ?? false;
+      };
 
       if (item.dosage.morning.take) {
-        const morningInfo = {
+        medicinesDosage.morning.push({
           _id: item._id,
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.morning.afterMeal,
-          hasTaken: matchingTracking?.slots.morning || false,
-        };
-        medicinesDosage.morning.push(morningInfo);
+          hasTaken: hasTakenDefault("morning"), // ✅ Fix
+        });
       }
 
       if (item.dosage.afternoon.take) {
-        const afternoonInfo = {
+        medicinesDosage.afternoon.push({
           _id: item._id,
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.afternoon.afterMeal,
-          hasTaken: matchingTracking?.slots.afternoon || false,
-        };
-        medicinesDosage.afternoon.push(afternoonInfo);
+          hasTaken: hasTakenDefault("afternoon"), // ✅ Fix
+        });
       }
 
       if (item.dosage.evening.take) {
-        const eveningInfo = {
+        medicinesDosage.evening.push({
           _id: item._id,
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.evening.afterMeal,
-          hasTaken: matchingTracking?.slots.evening || false,
-        };
-        medicinesDosage.evening.push(eveningInfo);
+          hasTaken: hasTakenDefault("evening"), // ✅ Fix
+        });
       }
     });
 
-    const sortMedicines = (list: TodayMedicineDosage[]) => {
-      return list.sort((a, b) => Number(a.afterMeal) - Number(b.afterMeal));
-    };
+    // ✅ Sort Medicines so `afterMeal: false` comes first
+    const sortMedicines = (list: TodayMedicineDosage[]) =>
+      list.sort((a, b) => Number(a.afterMeal) - Number(b.afterMeal));
+
     medicinesDosage = {
       morning: sortMedicines(medicinesDosage.morning),
       afternoon: sortMedicines(medicinesDosage.afternoon),
@@ -190,6 +189,7 @@ const getTodayMedicines = async (req: Request, res: Response) => {
     return sendErrorResponse(res, "Failed to fetch today medicines", [], 500);
   }
 };
+
 
 const markAsTaken = async (req: Request, res: Response) => {
   const { userId, medicineId, slotName, hasTaken } = req.body;

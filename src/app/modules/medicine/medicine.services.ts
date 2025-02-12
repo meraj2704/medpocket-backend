@@ -58,24 +58,22 @@ const markAsTaken = async (
 
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
+
   const medicineTracking = await MedicineTrackingModel.findOneAndUpdate(
     {
       userId,
       medicineId,
-      date: {
-        $gte: startOfDay,
-        $lte: endOfDay,
-      },
+      date: { $gte: startOfDay, $lte: endOfDay },
     },
     {
-      slots: {
-        [slotName]: hasTaken,
-      },
+      $set: { [`slots.${slotName}`]: hasTaken }, // ✅ Updates ONLY the selected slot
     },
-    { upsert: true, new: true }
+    { upsert: true, new: true } // ✅ Creates entry if it doesn't exist
   );
+
   return medicineTracking;
 };
+
 
 const deleteMedicine = async (id: mongoose.Types.ObjectId) => {
   const deleteMedicine = await MedicationModel.findByIdAndDelete({ _id: id });
