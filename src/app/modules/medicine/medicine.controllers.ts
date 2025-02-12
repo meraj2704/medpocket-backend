@@ -117,7 +117,7 @@ const getTodayMedicines = async (req: Request, res: Response) => {
       await MedicineServices.getTodayMedicineTracking(userId);
 
     console.log("trackingTodayMedicineData", trackingTodayMedicineData);
-    const medicinesDosage: {
+    let medicinesDosage: {
       morning: TodayMedicineDosage[];
       afternoon: TodayMedicineDosage[];
       evening: TodayMedicineDosage[];
@@ -169,6 +169,15 @@ const getTodayMedicines = async (req: Request, res: Response) => {
         medicinesDosage.evening.push(eveningInfo);
       }
     });
+
+    const sortMedicines = (list: TodayMedicineDosage[]) => {
+      return list.sort((a, b) => Number(a.afterMeal) - Number(b.afterMeal));
+    };
+    medicinesDosage = {
+      morning: sortMedicines(medicinesDosage.morning),
+      afternoon: sortMedicines(medicinesDosage.afternoon),
+      evening: sortMedicines(medicinesDosage.evening),
+    };
 
     return sendSuccessResponse(
       res,
