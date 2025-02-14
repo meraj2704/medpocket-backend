@@ -15,7 +15,35 @@ const todayMedicines = async (userId: mongoose.Types.ObjectId) => {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   console.log("today (midnight UTC):", today);
-
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  console.log("today (midnight UTC):", today);
+  consj
   const medicines = await MedicationModel.find({
     userId,
     "duration.start": { $lte: today },
