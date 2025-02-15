@@ -10,7 +10,52 @@ router.post(
   upload.none(),
   validate(MedicineSchema.medicineSchema),
   MedicationControllers.addMedicine
-);
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicine
+  MedicationControllers.addMedicijne
+  MedicationControllers.addMedicine
+
 
 router.get("/get-all-medicines/:id", MedicationControllers.getAllMedicine);
 
