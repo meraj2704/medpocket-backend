@@ -4,6 +4,8 @@ import { userService } from "../user/user.services";
 import { MedicineServices } from "./medicine.services";
 import mongoose, { mongo } from "mongoose";
 import { TodayMedicineDosage } from "./medicine.interfaces";
+
+// Add New Medicine
 const addMedicine = async (req: Request, res: Response) => {
   const medicines = req.body;
   console.log("medicines", medicines);
@@ -114,8 +116,11 @@ const getTodayMedicines = async (req: Request, res: Response) => {
     }
 
     const todayMedicines = await MedicineServices.todayMedicines(userId);
+    console.log("today medicine", todayMedicines);
     const trackingTodayMedicineData =
       await MedicineServices.getTodayMedicineTracking(userId);
+
+    console.log("tracking medicine data", trackingTodayMedicineData);
 
     let medicinesDosage: {
       morning: TodayMedicineDosage[];
@@ -133,8 +138,12 @@ const getTodayMedicines = async (req: Request, res: Response) => {
       );
 
       // ✅ Ensure `hasTaken` is always `false` by default
-      const hasTakenDefault = (slot: 'morning' | 'afternoon' | 'evening') => {
-        return matchingTracking?.slots?.[slot] ?? false;
+      const hasTakenDefault = (
+        slot: "morning" | "afternoon" | "evening"
+      ): boolean => {
+        return !!matchingTracking?.slots?.[
+          slot as keyof typeof matchingTracking.slots
+        ];
       };
 
       if (item.dosage.morning.take) {
@@ -190,7 +199,6 @@ const getTodayMedicines = async (req: Request, res: Response) => {
   }
 };
 
-
 const markAsTaken = async (req: Request, res: Response) => {
   const { userId, medicineId, slotName, hasTaken } = req.body;
   const newUserId = new mongoose.Types.ObjectId(userId);
@@ -210,7 +218,8 @@ const markAsTaken = async (req: Request, res: Response) => {
       updatedMedicineSlot,
       "Medicine slot marked as taken",
       200
-    ); return sendSuccessResponse(
+    );
+    return sendSuccessResponse(
       res,
       updatedMedicineSlot,
       "Medicine slot marked as taken",

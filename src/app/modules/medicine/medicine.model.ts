@@ -46,11 +46,8 @@ const MedicineTrackingSchema = new Schema<IMedicineTracking>({
     required: true,
   },
   date: { type: Date, required: true },
-  slots: {
-    morning: { type: Boolean, default: false },
-    afternoon: { type: Boolean, default: false },
-    evening: { type: Boolean, default: false },
-  },
+  slots: {type:String, required: true},
+  hasTaken: {type:Boolean, required: true}
 });
 
 export const MedicineTrackingModel = mongoose.model<IMedicineTracking>(

@@ -14,36 +14,6 @@ const getMedicines = async (userId: mongoose.Types.ObjectId) => {
 const todayMedicines = async (userId: mongoose.Types.ObjectId) => {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  console.log("today (midnight UTC):", today);
-  consj
   const medicines = await MedicationModel.find({
     userId,
     "duration.start": { $lte: today },
@@ -94,7 +64,7 @@ const markAsTaken = async (
       date: { $gte: startOfDay, $lte: endOfDay },
     },
     {
-      $set: { [`slots.${slotName}`]: hasTaken }, // ✅ Updates ONLY the selected slot
+      $set: { [`slots.${slotName}`]: hasTaken },
     },
     { upsert: true, new: true } // ✅ Creates entry if it doesn't exist
   );
@@ -102,6 +72,13 @@ const markAsTaken = async (
   return medicineTracking;
 };
 
+const getAlreadyUpdatedOrNot = async (
+  userId: mongoose.Types.ObjectId,
+  medicineId: mongoose.Types.ObjectId,
+  slot: string
+) => {
+  
+};
 
 const deleteMedicine = async (id: mongoose.Types.ObjectId) => {
   const deleteMedicine = await MedicationModel.findByIdAndDelete({ _id: id });
