@@ -116,7 +116,7 @@ const getTodayMedicines = async (req: Request, res: Response) => {
     }
 
     const todayMedicines = await MedicineServices.todayMedicines(userId);
-    console.log("today medicine", todayMedicines);
+    // console.log("today medicine", todayMedicines);
     const trackingTodayMedicineData =
       await MedicineServices.getTodayMedicineTracking(userId);
 
@@ -133,18 +133,39 @@ const getTodayMedicines = async (req: Request, res: Response) => {
     };
 
     todayMedicines.forEach((item) => {
-      const matchingTracking = trackingTodayMedicineData.find((tracking) =>
+      const matchingTracking = trackingTodayMedicineData.filter((tracking) =>
         item._id.equals(tracking.medicineId)
       );
 
-      // ✅ Ensure `hasTaken` is always `false` by default
-      const hasTakenDefault = (
-        slot: "morning" | "afternoon" | "evening"
-      ): boolean => {
-        return !!matchingTracking?.slots?.[
-          slot as keyof typeof matchingTracking.slots
-        ];
-      };
+      const result = matchingTracking.reduce((acc: { [key: string]: any }, tracking) => {
+        const medicineId = tracking.medicineId.toString(); // Ensure it's a string for easier matching
+        
+        if (!acc[medicineId]) {
+          acc[medicineId] = {
+            _id: tracking._id,
+            userId: tracking.userId,
+            medicineId: tracking.medicineId,
+            morning: false,
+            evening: false,
+            night: false
+          };
+        }
+      
+        // Update the slot value if the slot matches
+        if (tracking.slot === 'morning') {
+          acc[medicineId].morning = tracking.hasTaken;
+        } else if (tracking.slot === 'evening') {
+          acc[medicineId].evening = tracking.hasTaken;
+        } else if (tracking.slot === 'night') {
+          acc[medicineId].night = tracking.hasTaken;
+        }
+      
+        return acc;
+      }, {});
+      
+
+      console.log("Matching tracking", matchingTracking);
+      console.log("result ", result);
 
       if (item.dosage.morning.take) {
         medicinesDosage.morning.push({
@@ -152,7 +173,7 @@ const getTodayMedicines = async (req: Request, res: Response) => {
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.morning.afterMeal,
-          hasTaken: hasTakenDefault("morning"), // ✅ Fix
+          hasTaken: result.morning || false, // ✅ Fix
         });
       }
 
@@ -162,7 +183,7 @@ const getTodayMedicines = async (req: Request, res: Response) => {
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.afternoon.afterMeal,
-          hasTaken: hasTakenDefault("afternoon"), // ✅ Fix
+          hasTaken: result.afternoon || false, // ✅ Fix
         });
       }
 
@@ -172,7 +193,7 @@ const getTodayMedicines = async (req: Request, res: Response) => {
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.evening.afterMeal,
-          hasTaken: hasTakenDefault("evening"), // ✅ Fix
+          hasTaken: result.evening || false, // ✅ Fix
         });
       }
     });
@@ -204,21 +225,25 @@ const markAsTaken = async (req: Request, res: Response) => {
   const newUserId = new mongoose.Types.ObjectId(userId);
   const medicineIdObj = new mongoose.Types.ObjectId(medicineId);
   try {
+    const alreadyUpdated = await MedicineServices.getAlreadyUpdatedOrNot(
+      newUserId,
+      medicineIdObj,
+      slotName
+    );
+    if (alreadyUpdated) {
+      return sendErrorResponse(
+        res,
+        "Medicine slot has already been updated",
+        [],
+        400
+      );
+    }
     const updatedMedicineSlot = await MedicineServices.markAsTaken(
       newUserId,
       medicineIdObj,
-      slotName,
-      hasTaken
+      slotName
     );
-    if (!updatedMedicineSlot) {
-      return sendErrorResponse(res, "Medicine slot not found", [], 404);
-    }
-    return sendSuccessResponse(
-      res,
-      updatedMedicineSlot,
-      "Medicine slot marked as taken",
-      200
-    );
+
     return sendSuccessResponse(
       res,
       updatedMedicineSlot,

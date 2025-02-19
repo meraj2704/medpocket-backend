@@ -39,16 +39,13 @@ const getTodayMedicineTracking = async (userId: mongoose.Types.ObjectId) => {
     },
   });
 
-  console.log("today tracking medicine", medicineTracking);
-
   return medicineTracking;
 };
 
 const markAsTaken = async (
   userId: mongoose.Types.ObjectId,
   medicineId: mongoose.Types.ObjectId,
-  slotName: string,
-  hasTaken: boolean
+  slotName: string
 ) => {
   const today = new Date();
   const startOfDay = new Date();
@@ -57,18 +54,13 @@ const markAsTaken = async (
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
 
-  const medicineTracking = await MedicineTrackingModel.findOneAndUpdate(
-    {
-      userId,
-      medicineId,
-      date: { $gte: startOfDay, $lte: endOfDay },
-    },
-    {
-      $set: { [`slots.${slotName}`]: hasTaken },
-    },
-    { upsert: true, new: true } // ✅ Creates entry if it doesn't exist
-  );
-
+  const medicineTracking = await MedicineTrackingModel.create({
+    userId,
+    medicineId,
+    date: today,
+    slot: slotName,
+    hasTaken: true,
+  });
   return medicineTracking;
 };
 
@@ -77,7 +69,19 @@ const getAlreadyUpdatedOrNot = async (
   medicineId: mongoose.Types.ObjectId,
   slot: string
 ) => {
-  
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+  const updated = await MedicineTrackingModel.findOne({
+    userId,
+    medicineId,
+    date: { $gte: startOfDay, $lte: endOfDay },
+    slot: slot,
+    hasTaken: true,
+  });
+  return updated;
 };
 
 const deleteMedicine = async (id: mongoose.Types.ObjectId) => {
@@ -103,4 +107,5 @@ export const MedicineServices = {
   updateMedication,
   getTodayMedicineTracking,
   markAsTaken,
+  getAlreadyUpdatedOrNot,
 };

@@ -48,6 +48,6 @@ export interface IMedicineTracking {
   userId: mongoose.Types.ObjectId;
   medicineId: mongoose.Types.ObjectId;
   date: Date;
-  slots: string;
+  slot: string;
   hasTaken: boolean;
 }

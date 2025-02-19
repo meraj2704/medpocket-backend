@@ -46,7 +46,7 @@ const MedicineTrackingSchema = new Schema<IMedicineTracking>({
     required: true,
   },
   date: { type: Date, required: true },
-  slots: {type:String, required: true},
+  slot: {type:String, required: true},
   hasTaken: {type:Boolean, required: true}
 });
 

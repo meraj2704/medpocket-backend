@@ -44,9 +44,6 @@ const markAsUpdateSchema = z.object({
         message: "Slot Name must be morning, afternoon, or evening",
       }),
     }),
-    hasTaken: z.boolean().refine((value) => value === true, {
-      message: "hasTaken must always be true",
-    }),
   }),
 });
 
