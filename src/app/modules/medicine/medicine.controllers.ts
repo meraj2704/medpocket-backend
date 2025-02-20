@@ -146,18 +146,18 @@ const getTodayMedicines = async (req: Request, res: Response) => {
             userId: tracking.userId,
             medicineId: tracking.medicineId,
             morning: false,
-            evening: false,
-            night: false
+            afternoon: false,
+            evening: false
           };
         }
       
         // Update the slot value if the slot matches
         if (tracking.slot === 'morning') {
           acc[medicineId].morning = tracking.hasTaken;
+        } else if (tracking.slot === 'afternoon') {
+          acc[medicineId].afternoon = tracking.hasTaken;
         } else if (tracking.slot === 'evening') {
           acc[medicineId].evening = tracking.hasTaken;
-        } else if (tracking.slot === 'night') {
-          acc[medicineId].night = tracking.hasTaken;
         }
       
         return acc;
@@ -173,30 +173,32 @@ const getTodayMedicines = async (req: Request, res: Response) => {
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.morning.afterMeal,
-          hasTaken: result.morning || false, // ✅ Fix
+          hasTaken: result[item._id.toString()]?.morning || false,
         });
       }
-
+    
       if (item.dosage.afternoon.take) {
         medicinesDosage.afternoon.push({
           _id: item._id,
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.afternoon.afterMeal,
-          hasTaken: result.afternoon || false, // ✅ Fix
+          hasTaken: result[item._id.toString()]?.afternoon || false,
         });
       }
-
+    
       if (item.dosage.evening.take) {
         medicinesDosage.evening.push({
           _id: item._id,
           medicineName: item.medicineName,
           type: item.type,
           afterMeal: item.dosage.evening.afterMeal,
-          hasTaken: result.evening || false, // ✅ Fix
+          hasTaken: result[item._id.toString()]?.evening || false,
         });
       }
     });
+
+    // console.log("medicine dosages", medicinesDosage)
 
     // ✅ Sort Medicines so `afterMeal: false` comes first
     const sortMedicines = (list: TodayMedicineDosage[]) =>
